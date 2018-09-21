@@ -1,143 +1,146 @@
 import fileinput
-import itertools
+import os.path
+import copy
+import time
 
-# count the size of the populations file
-rows = 0
-cols = 0
-wordCount = 0
-words = []
-wordLengths = [[] for x in range(100)]
-print(wordLengths)
-# count rows, columns, words, and store words in array
-for line in fileinput.input("puzzles/puzzle3.txt"):
-	if '.' in line or '*' in line:
-		rows += 1
-		cols = len(line)-1
-	else:
-		wordCount += 1
-		words.append(line.strip())
-# create a grid to match the puzzle
-grid = [[0 for x in range(cols)] for y in range(rows)]
-r = 0
-c = 0
-for line in fileinput.input("puzzles/puzzle3.txt"):
-	if r < rows:
-		for char in range(len(line) - 1):
-			if line[char] == '.':
-				grid[r][c] = '.'
-			else:
-				grid[r][c] = '*'
-			c += 1
-		r += 1
-		c = 0
-# search the grid for spots to fill and store their locations in a list
 puzzleList = []
-currList = []
-# find horizontal spots
-for i in range(rows):
-	for j in range(cols):
-		if grid[i][j] == '*':
-			currList.append([i, j])
-		if grid[i][j] == '.':
-			if len(currList) > 1:
-				puzzleList.append(currList)
-			currList = []
-	if len(currList) > 1:
-		puzzleList.append(currList)
+comSpots = []
+times = []
+
+#simple function to print a grid in a pleasing way
+def printGrid(grid):
+	for row in grid:
+		for tile in row:
+			print(tile, end = "")
+		print("\n")
+
+#this function returns all spaces that intersect with a given space and 
+def intersectingSpaces(space, filledSpaces):
+	returnList = []																#initialize the return list
+	for i in range(len(puzzleList)):											#for each space in the puzzle
+		if puzzleList[i] is not space and puzzleList[i] not in filledSpaces:	#if the space is unoccupied and not the same as the input space
+			for comSpot in comSpots:											#for each intersecting spot in the puzzle
+				if comSpot in space and comSpot in puzzleList[i]:				#if the spot exists in both spaces
+					returnList.append(puzzleList[i])							#add the non-input space to the return list
+	return returnList															#return the list
+
+#this function tries to place a word in a given space using the grid
+def placeWord(grid, space, word):
+	for i in range(len(word)):							#for each character in the word
+		if grid[space[i][0]][space[i][1]] == '*':		#if the correspoing spot on the grid is empty
+			grid[space[i][0]][space[i][1]] = word[i]	#place the character of the word into the grid spot
+		if grid[space[i][0]][space[i][1]] != word[i]:	#if the grid spot doesn't equal the character
+			return 0									#return 0, failed to place word
+	return 1											#if all characters were placed successfully, return 1
+
+
+def solve(grid, space, wordList, filledSpaces):
+	for word in wordList:								#for each word in the wordlist
+		tempSpaces = copy.deepcopy(filledSpaces)		#copy the occupied spaces and grid (this serves as both a "reset" for these variables as well as allows us to use trial and error without causing data damage)
+		tempGrid = copy.deepcopy(grid)
+		cont = 1										#reset the continue variable
+		if len(word) == len(space):						#if the length of the word matches the length of the space
+			cont = placeWord(tempGrid, space, word)		#continue depends on the success of placing the word in the grid
+			if len(wordList) == 1 and cont == 1:		#if the word was placed successfully and it was the last word, return 2 (tell the program to wrap up, it's done)
+				return (2, tempGrid, wordList)
+			if cont:									#if the word was placed successfully
+				tempSpaces.append(space)				#add the space the word took to the cloned occupied spaces list
+				tempWordList = []						#create a new list for words
+				for word2 in wordList:					#for each word in the word list
+					if word2 != word:					#if the word is not the word just placed on the grid
+						tempWordList.append(word2)		#add it to the new word list
+				for common in intersectingSpaces(space, tempSpaces):		#for each intersecting word
+					#call the solve function again with the new trial-and-error temporary variables
+					(cont, tempGrid, tempWordList) = solve(tempGrid, common, tempWordList, tempSpaces)
+					if cont == 0:						#if the recursive solve came back bad
+						break							#break and try a new word
+					if cont == 2:						#if the recursive solve came back as a success
+						return (2, tempGrid, tempWordList)	#pass it on
+				if cont:								#if the recursive solve solved all intersecting spaces, but the puzzle is not yet solved
+					return (1, tempGrid, tempWordList)	#return the new values but with a 1 to tell the program to continue
+	return (0, grid, wordList)							#if the function tried every word in the list and nothing fits, return 0
+
+
+for puznum in range(1, sum([len(files) for r, d, files in os.walk("puzzles")]) + 1):		#for each file in the puzzle folder
+	#initialize variables
+	start = time.time()
+	puzzleList = []
+	comSpots = []
+	filename = "puzzles/puzzle" + str(puznum) + ".txt"
+	rows = 0
+	cols = 0
+	wordCount = 0
+	words = []
+	#count rows, columns, words, and store words in array
+	for line in fileinput.input(filename):
+		if '.' in line or '*' in line:
+			rows += 1
+			cols = len(line)-1
+		else:
+			wordCount += 1
+			words.append(line.strip())
+	#create a grid to match the puzzle
+	grid = [[0 for x in range(cols)] for y in range(rows)]
+	r = 0
+	c = 0
+	for line in fileinput.input(filename):
+		if r < rows:
+			for char in range(len(line) - 1):
+				if line[char] == '.':
+					grid[r][c] = '.'
+				else:
+					grid[r][c] = '*'
+				c += 1
+			r += 1
+			c = 0
+	#search the grid for spots to fill and store their locations in a list
 	currList = []
-# find vertical spots
-for j in range(cols):
+
+	#find horizontal spaces
 	for i in range(rows):
-		if grid[i][j] == '*':
-			currList.append([i, j])
-		if grid[i][j] == '.':
-			if len(currList) > 1:
-				puzzleList.append(currList)
-			currList = []
-	if len(currList) > 1:
-		puzzleList.append(currList)
-	currList = []
-for i in range(wordCount):
-	words.append(words[i][::-1])
-for word in words:
-	wordLengths[len(word)].append(word)
-print("Finished shit")
-attempts = []
-add = True
-counter = 0
-print(wordLengths)
-for spot in puzzleList:
-	for i in range(wordLengths):
-		if len(spot) == i:
-			
-# for solution in itertools.permutations(words, wordCount):
-# 	add = True
-# 	for i in range(wordCount):
-# 		if len(solution[i]) != len(puzzleList[i]):
-# 			add = False
-# 			break
-# 	if add:
-# 		attempts.append(solution)
-# 		print(len(attempts))
-# 	counter += 1
-# 	print(counter)
+		for j in range(cols):
+			if grid[i][j] == '*':
+				currList.append((i, j))
+			if grid[i][j] == '.':
+				if len(currList) > 1:
+					puzzleList.append(currList)
+				currList = []
+		if len(currList) > 1:
+			puzzleList.append(currList)
+		currList = []
 
-# for bruteForceAttempt in attempts:
-# 	cont = True
-# 	for i in range(wordCount):
-# 		for j in range(len(bruteForceAttempt[i])):
-# 			if grid[puzzleList[i][j][0]][puzzleList[i][j][1]] == '*':
-# 				grid[puzzleList[i][j][0]][puzzleList[i][j][1]] = bruteForceAttempt[i][j]
-# 			if grid[puzzleList[i][j][0]][puzzleList[i][j][1]] != bruteForceAttempt[i][j]:
-# 				cont = False
-# 				break
-# 		if cont == False:
-# 			break
-# 	if cont == False:
-# 		for spot in puzzleList:
-# 			for coord in spot:
-# 				grid[coord[0]][coord[1]] = '*'
-# 	else:
-# 		break
-
-# commonSpots = []
-# # find coordinates of shared spaces
-# for spot1 in puzzleList:
-# 	for spot2 in puzzleList:
-# 		if spot1 is not spot2:
-# 			for coord1 in spot1:
-# 				for coord2 in spot2:
-# 					if coord1[0] == coord2[0] and coord1[1] == coord2[1] and coord1 not in commonSpots:
-# 						commonSpots.append(coord1)
-# print(commonSpots)
-for i in range(rows):
+	# find vertical spaces
 	for j in range(cols):
-		print(grid[i][j], end = "")
-	print("\n")
-print(rows, cols)
-for word in words:
-	print(word)
-# # create a dictionary and store the data inside of it
-# popDict = {}
-# for line in fileinput.input("populations.csv"):
-# 	line = line.split(",")
-# 	popDict[line[0]] = line[1]
-# input("Press enter to run the query")
-# # print the queries from the dictionary
-# for line in fileinput.input("queries.txt"):
-# 	print(line, popDict.get(line.strip()))
-# # create a 2D array to store the data in
-# popList = [[0] * 2 for i in range(size)]
-# count = 0
-# for line in fileinput.input("populations.csv"):
-# 	line = line.split(",")
-# 	popList[count][0] = line[0]
-# 	popList[count][1] = line[1]
-# 	count += 1
-# input("Press enter to run the next query")
-# # print the data of the string that matches
-# for line in fileinput.input("queries.txt"):
-# 	for i in range(size):
-# 		if line.strip() == popList[i][0].strip():
-# 			print(line, popList[i][1])
-# 			break
+		for i in range(rows):
+			if grid[i][j] == '*':
+				currList.append((i, j))
+			if grid[i][j] == '.':
+				if len(currList) > 1:
+					puzzleList.append(currList)
+				currList = []
+		if len(currList) > 1:
+			puzzleList.append(currList)
+		currList = []
+	comSpots = []
+
+	# find coordinates of shared spaces
+	for i in range(len(puzzleList)):
+		for j in range(i+1, len(puzzleList)):
+			for coord1 in puzzleList[i]:
+				for coord2 in puzzleList[j]:
+					if coord1[0] == coord2[0] and coord1[1] == coord2[1] and coord1 not in comSpots:
+						comSpots.append(coord1)
+
+	spacesOccupied = []
+	(result, grid, x) = solve(grid, puzzleList[0], words, spacesOccupied)
+	end = time.time()
+	times.append(end - start)
+
+	if result:
+		print("Puzzle", puznum, ":")
+		printGrid(grid)
+	else:
+		print("Puzzle", puznum, "is not possible")
+
+for time in times:
+	print("Puzzle", times.index(time) + 1, "took ", time, "seconds")
