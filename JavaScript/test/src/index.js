@@ -8,6 +8,11 @@ import Explorer from "./components/explorer";
 ReactDOM.render(
 	<div>
 		<Explorer
+			title={"Get users"}
+			url={"https://jsonplaceholder.typicode.com/users"}
+			method={"GET"}
+		/>
+		<Explorer
 			title={"Add new user"}
 			url={"https://jsonplaceholder.typicode.com/users"}
 			method={"POST"}
@@ -31,7 +36,34 @@ ReactDOM.render(
 				}
 			]}
 		/>
-		// document.getElementById("root")
+		<Explorer
+			title={"Edit user"}
+			url={"https://jsonplaceholder.typicode.com/users"}
+			method={"PUT"}
+			body={[
+				{
+					name: "id",
+					required: true
+				},
+				{
+					name: "email",
+					type: "email",
+					max: 24,
+					min: 3
+				},
+				{
+					name: "full-name",
+					type: "text",
+					placeholder: "John Doe",
+					required: true
+				},
+				{
+					name: "phone",
+					type: "tel",
+					pattern: "[0-9]{3}-[0-9]{3}-[0-9]{4}"
+				}
+			]}
+		/>
 		<Explorer
 			title={"Delete a user"}
 			url={"https://jsonplaceholder.typicode.com/users"}
