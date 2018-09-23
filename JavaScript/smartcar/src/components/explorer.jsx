@@ -12,7 +12,7 @@ class Explorer extends Component {
 			this.printExplorer() //print the component
 		) : (
 			//otherwise print the source of the error (or)
-			<h1>Error initializing explorer component props</h1>
+			<h1>Error initializing Explorer component props</h1>
 		);
 	}
 
@@ -20,7 +20,7 @@ class Explorer extends Component {
 	validateProps() {
 		if (
 			!this.props.method ||
-			typeof this.props.method != "string" ||
+			typeof this.props.method !== "string" ||
 			(this.props.method !== "GET" &&
 				this.props.method !== "POST" &&
 				this.props.method !== "PUT" &&
@@ -28,11 +28,11 @@ class Explorer extends Component {
 		)
 			return false;
 
-		if (!this.props.url || typeof this.props.url != "string") return false;
+		if (!this.props.url || typeof this.props.url !== "string") return false;
 
 		if (
 			(this.props.method === "PUT" || this.props.method === "POST") &&
-			(!this.props.body || typeof this.props.body != "object")
+			(!this.props.body || typeof this.props.body !== "object")
 		) {
 			return false;
 		}

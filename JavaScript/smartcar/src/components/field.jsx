@@ -7,6 +7,14 @@ class Field extends Component {
 	state = {};
 
 	render() {
+		return this.validateProps() ? (
+			this.printField()
+		) : (
+			<h4>Error initializing Field component props</h4>
+		);
+	}
+
+	printField() {
 		let label = this.generateLabel();
 		return (
 			<div>
@@ -16,6 +24,13 @@ class Field extends Component {
 				<br style={{ lineHeight: 2 }} />
 			</div>
 		);
+	}
+
+	validateProps() {
+		if (!("name" in this.props.attributes)) {
+			return false;
+		}
+		return true;
 	}
 
 	generateLabel() {
