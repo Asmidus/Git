@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 
+//this class takes an array of html5 input attributs and applies them to a single field
+//input: array of attributes for <input> object
+//output: the <input> object
 class Field extends Component {
 	state = {};
 
@@ -10,7 +13,7 @@ class Field extends Component {
 				<label>{label}</label>
 				<br />
 				<input {...this.props.attributes} />
-				<br />
+				<br style={{ lineHeight: 2 }} />
 			</div>
 		);
 	}

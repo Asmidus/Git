@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import Field from "./field";
 
+//this class takes an array of objects denoting input fields and their attributes and prints them
+//input: body object
+//output: list of input fields and their names
 class FieldList extends Component {
 	state = {};
 	render() {
