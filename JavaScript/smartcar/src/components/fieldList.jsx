@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import Field from "./field";
 
 //this class takes an array of objects denoting input fields and their attributes and prints them
-//input: body object
-//output: list of input fields and their names
+//input:body object
+//output:list of input fields and their names
 class FieldList extends Component {
 	state = {};
 	render() {
@@ -19,6 +19,7 @@ class FieldList extends Component {
 		return <h2>Error initializing FieldList component props</h2>;
 	}
 
+	//make sure that the input body prop is an object
 	validateProps() {
 		if (this.props.body) {
 			if (typeof this.props.body !== "object") {
