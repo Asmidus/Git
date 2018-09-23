@@ -102,7 +102,7 @@ class Explorer extends Component {
 		let headers = [];
 		//manually add each defined prop input value to the header array if it exists
 		if (this.props.title) {
-			headers.push(<h1 key="title">{this.props.title}</h1>);
+			headers.push(<h2 key="title">{this.props.title}</h2>);
 		}
 		if (this.props.method) {
 			headers.push(
@@ -112,11 +112,11 @@ class Explorer extends Component {
 			);
 		}
 		if (this.props.url) {
-			headers.push(<h2 key="baseurl">Base URL</h2>);
+			headers.push(<h3 key="baseurl">Base URL</h3>);
 			headers.push(<h4 key="url">{this.props.url}</h4>);
 		}
 		//add the body header as it is common for every instance of this component
-		headers.push(<h2 key="body">Body</h2>);
+		headers.push(<h3 key="body">Body</h3>);
 		return headers;
 	}
 
