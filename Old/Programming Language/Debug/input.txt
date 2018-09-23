@@ -1,0 +1,14 @@
+x := 0;
+q := 5/0;
+y := 1;
+while ! x == 5 do
+y := 5 * x;
+x := x + 1;
+endwhile;
+if y == 120 then
+z := true;
+t := false
+else
+z := false;
+t := y == 50
+endif

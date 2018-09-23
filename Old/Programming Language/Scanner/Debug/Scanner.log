@@ -1,0 +1,13 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Interpreter.vcxproj, Parser.vcxproj, Scanner.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Evaluator.cpp
+c:\users\astro\onedrive\code\evaluator\scanner\scanner.h(26): warning C4018: '<': signed/unsigned mismatch
+c:\users\astro\onedrive\code\evaluator\scanner\scanner.h(30): warning C4018: '<': signed/unsigned mismatch
+c:\users\astro\onedrive\code\evaluator\scanner\scanner.h(31): warning C4018: '<': signed/unsigned mismatch
+c:\users\astro\onedrive\code\evaluator\scanner\scanner.h(35): warning C4018: '<': signed/unsigned mismatch
+c:\users\astro\onedrive\code\evaluator\scanner\evaluator.cpp(169): warning C4018: '<': signed/unsigned mismatch
+c:\users\astro\onedrive\code\evaluator\scanner\evaluator.cpp(176): warning C4018: '<': signed/unsigned mismatch
+c:\users\astro\onedrive\code\evaluator\scanner\evaluator.cpp(183): warning C4018: '<': signed/unsigned mismatch
+c:\users\astro\onedrive\code\evaluator\scanner\evaluator.cpp(145): warning C4101: 'c': unreferenced local variable
+c:\users\astro\onedrive\code\evaluator\scanner\evaluator.cpp(102): warning C4715: 'evaluateBool': not all control paths return a value
+c:\users\astro\onedrive\code\evaluator\scanner\evaluator.cpp(135): warning C4715: 'evaluateNumber': not all control paths return a value
+  Scanner.vcxproj -> C:\Users\astro\OneDrive\Code\Evaluator\Debug\Evaluator.exe

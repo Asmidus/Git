@@ -1,0 +1,130 @@
+x := 0;
+q := 5/0;
+y := 1;
+while ! x == 5 do
+y := 5 * x;
+x := x + 1;
+endwhile;
+if y == 120 then
+z := true;
+t := false
+else
+z := false;
+t := y == 50
+endif
+
+x, IDENTIFIER
+:=, PUNCTUATION
+0, NUMBER
+;, PUNCTUATION
+q, IDENTIFIER
+:=, PUNCTUATION
+5, NUMBER
+/, PUNCTUATION
+0, NUMBER
+;, PUNCTUATION
+y, IDENTIFIER
+:=, PUNCTUATION
+1, NUMBER
+;, PUNCTUATION
+while, KEYWORD
+!, PUNCTUATION
+x, IDENTIFIER
+==, PUNCTUATION
+5, NUMBER
+do, KEYWORD
+y, IDENTIFIER
+:=, PUNCTUATION
+5, NUMBER
+*, PUNCTUATION
+x, IDENTIFIER
+;, PUNCTUATION
+x, IDENTIFIER
+:=, PUNCTUATION
+x, IDENTIFIER
++, PUNCTUATION
+1, NUMBER
+;, PUNCTUATION
+endwhile, KEYWORD
+;, PUNCTUATION
+if, KEYWORD
+y, IDENTIFIER
+==, PUNCTUATION
+120, NUMBER
+then, KEYWORD
+z, IDENTIFIER
+:=, PUNCTUATION
+true, BOOL
+;, PUNCTUATION
+t, IDENTIFIER
+:=, PUNCTUATION
+false, BOOL
+else, KEYWORD
+z, IDENTIFIER
+:=, PUNCTUATION
+false, BOOL
+;, PUNCTUATION
+t, IDENTIFIER
+:=, PUNCTUATION
+y, IDENTIFIER
+==, PUNCTUATION
+50, NUMBER
+endif, KEYWORD
+
+PUNCTUATION ;
+        PUNCTUATION ;
+                PUNCTUATION ;
+                        PUNCTUATION ;
+                                PUNCTUATION :=
+                                        IDENTIFIER x
+                                        NUMBER 0
+                                PUNCTUATION :=
+                                        IDENTIFIER q
+                                        PUNCTUATION /
+                                                NUMBER 5
+                                                NUMBER 0
+                        PUNCTUATION :=
+                                IDENTIFIER y
+                                NUMBER 1
+                WHILE-LOOP
+                        PUNCTUATION !
+                                PUNCTUATION ==
+                                        IDENTIFIER x
+                                        NUMBER 5
+                        PUNCTUATION ;
+                                PUNCTUATION :=
+                                        IDENTIFIER y
+                                        PUNCTUATION *
+                                                NUMBER 5
+                                                IDENTIFIER x
+                                PUNCTUATION :=
+                                        IDENTIFIER x
+                                        PUNCTUATION +
+                                                IDENTIFIER x
+                                                NUMBER 1
+        IF-STATEMENT
+                PUNCTUATION ==
+                        IDENTIFIER y
+                        NUMBER 120
+                PUNCTUATION ;
+                        PUNCTUATION :=
+                                IDENTIFIER z
+                                BOOLEAN true
+                        PUNCTUATION :=
+                                IDENTIFIER t
+                                BOOLEAN false
+                PUNCTUATION ;
+                        PUNCTUATION :=
+                                IDENTIFIER z
+                                BOOLEAN false
+                        PUNCTUATION :=
+                                IDENTIFIER t
+                                PUNCTUATION ==
+                                        IDENTIFIER y
+                                        NUMBER 50
+Variables:
+q: 0
+x: 5
+y: 20
+t: false
+z: false
