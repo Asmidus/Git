@@ -11,7 +11,7 @@ times = []
 def printGrid(grid):
 	for row in grid:
 		for tile in row:
-			print(tile, end = "")
+			print(tile, end = "  ")
 		print("\n")
 
 #this function returns all spaces that intersect with a given space and 
@@ -27,43 +27,60 @@ def intersectingSpaces(space, filledSpaces):
 #this function tries to place a word in a given space using the grid
 def placeWord(grid, space, word):
 	for i in range(len(word)):							#for each character in the word
-		if grid[space[i][0]][space[i][1]] == '*':		#if the correspoing spot on the grid is empty
+		if grid[space[i][0]][space[i][1]] == "*":		#if the correspoing spot on the grid is empty
 			grid[space[i][0]][space[i][1]] = word[i]	#place the character of the word into the grid spot
 		if grid[space[i][0]][space[i][1]] != word[i]:	#if the grid spot doesn't equal the character
 			return 0									#return 0, failed to place word
 	return 1											#if all characters were placed successfully, return 1
 
+#this function takes the grid, a space, and a word list and returns a list of words
+#that satisfy the spaces conditions
+def possibleWords(grid, space, wordList):
+	newList = []
+	letters = []
+	indices = []
+	for i in range(len(space)):
+		if grid[space[i][0]][space[i][1]] != "*":
+			letters.append(grid[space[i][0]][space[i][1]])
+			indices.append(i)
+	for word in wordList:
+		addWord = True
+		if len(word) == len(space):
+			for i in range(len(letters)):
+				if word[indices[i]] != letters[i]:
+					addWord = False
+					break
+			if addWord:
+				newList.append(word)
+	return newList
 
 def solve(grid, space, wordList, filledSpaces):
-	for word in wordList:								#for each word in the wordlist
+	possWords = possibleWords(grid, space, wordList)
+	for word in possWords:								#for each word in the wordlist
 		tempSpaces = copy.deepcopy(filledSpaces)		#copy the occupied spaces and grid (this serves as both a "reset" for these variables as well as allows us to use trial and error without causing data damage)
 		tempGrid = copy.deepcopy(grid)
-		cont = 1										#reset the continue variable
-		if len(word) == len(space):						#if the length of the word matches the length of the space
-			cont = placeWord(tempGrid, space, word)		#continue depends on the success of placing the word in the grid
-			if len(wordList) == 1 and cont == 1:		#if the word was placed successfully and it was the last word, return 2 (tell the program to wrap up, it's done)
-				return (2, tempGrid, wordList)
-			if cont:									#if the word was placed successfully
-				tempSpaces.append(space)				#add the space the word took to the cloned occupied spaces list
-				tempWordList = []						#create a new list for words
-				for word2 in wordList:					#for each word in the word list
-					if word2 != word:					#if the word is not the word just placed on the grid
-						tempWordList.append(word2)		#add it to the new word list
-				for common in intersectingSpaces(space, tempSpaces):		#for each intersecting word
-					#call the solve function again with the new trial-and-error temporary variables
-					(cont, tempGrid, tempWordList) = solve(tempGrid, common, tempWordList, tempSpaces)
-					if cont == 0:						#if the recursive solve came back bad
-						break							#break and try a new word
-					if cont == 2:						#if the recursive solve came back as a success
-						return (2, tempGrid, tempWordList)	#pass it on
-				if cont:								#if the recursive solve solved all intersecting spaces, but the puzzle is not yet solved
-					return (1, tempGrid, tempWordList)	#return the new values but with a 1 to tell the program to continue
+		cont = placeWord(tempGrid, space, word)		#continue depends on the success of placing the word in the grid
+		if len(wordList) == 1 and cont == 1:		#if the word was placed successfully and it was the last word, return 2 (tell the program to wrap up, it's done)
+			return (2, tempGrid, wordList)
+		if cont:									#if the word was placed successfully
+			tempSpaces.append(space)				#add the space the word took to the cloned occupied spaces list
+			tempWordList = copy.deepcopy(wordList)
+			tempWordList.remove(word)
+			for common in intersectingSpaces(space, tempSpaces):		#for each intersecting word
+				#call the solve function again with the new trial-and-error temporary variables
+				(cont, tempGrid, tempWordList) = solve(tempGrid, common, tempWordList, tempSpaces)
+				if cont == 0:						#if the recursive solve came back bad
+					break							#break and try a new word
+				if cont == 2:						#if the recursive solve came back as a success
+					return (2, tempGrid, tempWordList)	#pass it on
+			if cont:								#if the recursive solve solved all intersecting spaces, but the puzzle is not yet solved
+				return (1, tempGrid, tempWordList)	#return the new values but with a 1 to tell the program to continue
 	return (0, grid, wordList)							#if the function tried every word in the list and nothing fits, return 0
 
 
 for puznum in range(1, sum([len(files) for r, d, files in os.walk("puzzles")]) + 1):		#for each file in the puzzle folder
 	#initialize variables
-	start = time.time()
+	start = time.clock()
 	puzzleList = []
 	comSpots = []
 	filename = "puzzles/puzzle" + str(puznum) + ".txt"
@@ -133,7 +150,7 @@ for puznum in range(1, sum([len(files) for r, d, files in os.walk("puzzles")]) +
 
 	spacesOccupied = []
 	(result, grid, x) = solve(grid, puzzleList[0], words, spacesOccupied)
-	end = time.time()
+	end = time.clock()
 	times.append(end - start)
 
 	if result:
@@ -143,4 +160,4 @@ for puznum in range(1, sum([len(files) for r, d, files in os.walk("puzzles")]) +
 		print("Puzzle", puznum, "is not possible")
 
 for time in times:
-	print("Puzzle", times.index(time) + 1, "took ", time, "seconds")
+	print("Puzzle", times.index(time) + 1, "took ", time*1000.0, "ms")
