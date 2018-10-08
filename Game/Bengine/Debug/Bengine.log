@@ -1,0 +1,6 @@
+﻿  Sprite.cpp
+c:\users\river\desktop\code\git\game\bengine\sprite.cpp(19): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\river\desktop\code\git\game\bengine\sprite.cpp(20): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\river\desktop\code\git\game\bengine\sprite.cpp(21): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\river\desktop\code\git\game\bengine\sprite.cpp(22): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  Bengine.vcxproj -> C:\Users\River\Desktop\Code\Git\Game\Debug\Bengine.lib
