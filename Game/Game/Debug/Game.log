@@ -1,0 +1,9 @@
+﻿  MainGame.cpp
+c:\users\river\desktop\code\git\game\game\maingame.cpp(30): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\river\desktop\code\git\game\game\maingame.cpp(34): warning C4018: '<': signed/unsigned mismatch
+c:\users\river\desktop\code\git\game\game\maingame.cpp(55): warning C4244: 'initializing': conversion from 'Uint32' to 'float', possible loss of data
+c:\users\river\desktop\code\git\game\game\maingame.cpp(69): warning C4244: 'argument': conversion from 'float' to 'Uint32', possible loss of data
+c:\users\river\desktop\code\git\game\game\maingame.cpp(133): warning C4018: '<': signed/unsigned mismatch
+c:\users\river\desktop\code\git\game\game\maingame.cpp(144): warning C4244: 'initializing': conversion from 'Uint32' to 'float', possible loss of data
+c:\users\river\desktop\code\git\game\game\maingame.cpp(146): warning C4244: 'initializing': conversion from 'Uint32' to 'float', possible loss of data
+  Game.vcxproj -> C:\Users\River\Desktop\Code\Git\Game\Debug\Game.exe
