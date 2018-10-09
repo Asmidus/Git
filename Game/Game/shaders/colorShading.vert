@@ -8,9 +8,11 @@ out vec4 fragmentColor;
 out vec2 fragmentUV;
 
 uniform mat4 ortho;
+uniform float offsetX;
+uniform float offsetY;
 
 void main() {
-	gl_Position.xy = (ortho * vec4(vertexPosition, 0.0, 1.0)).xy;
+	gl_Position.xy = (ortho * vec4(vertexPosition.x + offsetX, vertexPosition.y + offsetY, 0.0, 1.0)).xy;
 	gl_Position.z = 0.0;
 	gl_Position.w = 1.0;
 	fragmentColor = vertexColor;

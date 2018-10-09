@@ -15,23 +15,7 @@ namespace Bengine {
 	class Glyph {
 	public:
 		Glyph() {};
-		Glyph(const glm::vec4 & destRect, const glm::vec4 & uvRect, GLuint Texture, float Depth, const Color & color) : texture(Texture), depth(Depth) {
-			topLeft.color = color;
-			topLeft.setPosition(destRect.x, destRect.y + destRect.w);
-			topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
-
-			botLeft.color = color;
-			botLeft.setPosition(destRect.x, destRect.y);
-			botLeft.setUV(uvRect.x, uvRect.y);
-
-			topRight.color = color;
-			topRight.setPosition(destRect.x + destRect.z, destRect.y + destRect.w);
-			topRight.setUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
-
-			botRight.color = color;
-			botRight.setPosition(destRect.x + destRect.z, destRect.y);
-			botRight.setUV(uvRect.x + uvRect.z, uvRect.y);
-		}
+		Glyph(const glm::vec4 & destRect, const glm::vec4 & uvRect, GLuint Texture, float Depth, const Color & color);
 
 		GLuint texture;
 		float depth;

@@ -4,7 +4,10 @@
 #include <Bengine/ImageLoader.h>
 #include <Bengine/Errors.h>
 #include <Bengine/ResourceManager.h>
+#include <Bengine/InputManager.h>
 #include <string>
+#include <random>
+#include <time.h>
 
 
 
@@ -21,15 +24,29 @@ MainGame::~MainGame() {}
 
 void MainGame::run() {
 	initSystems();
-	_sprites.push_back(new Bengine::Sprite());
-	_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
-	_sprites.push_back(new Bengine::Sprite());
-	_sprites.back()->init(500, 250, 50, 50, "images/PlayerShip.png");
-	for (int i = 0; i < 26000; i++) {
-		_sprites.push_back(new Bengine::Sprite());
-		_sprites.back()->init(0.2*i, 0.1*i, 50, 50, "images/PlayerShip.png");
+	GLint offX = _colorProgram.getUniformLocation("offsetX");
+	GLint offY = _colorProgram.getUniformLocation("offsetY");
+	//_sprites.push_back(new Bengine::Sprite());
+	//_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
+	//_sprites.push_back(new Bengine::Sprite());
+	//_sprites.back()->init(500, 250, 50, 50, "images/PlayerShip.png");
+	//for (int i = 0; i < 20000; i++) {
+	//	_sprites.push_back(new Bengine::Sprite(offX, offY));
+	//	_sprites.back()->init(0.2*i, 0.1*i, 50, 50, "images/PlayerShip.png");
+	//}
+	_tex = Bengine::ResourceManager::getTexture("images/PlayerShip.png");
+	Bengine::Color col;
+	col.r = 255;
+	col.b = 255;
+	col.g = 255;
+	col.a = 255;
+	_spriteBatch.begin();
+	for (int i = 0; i < 20000; i++) {
+		glm::vec4 pos(50*i, 0.0f, 500.0f, 500.0f);
+		glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
+		_spriteBatch.draw(pos, uv, _tex.id, 0.0f, col);
 	}
-	//_tex = Bengine::ResourceManager::getTexture("images/PlayerShip.png");
+	_spriteBatch.end();
 	gameLoop();
 	for (int i = 0; i < _sprites.size(); i++) {
 		delete _sprites[i];
@@ -42,6 +59,8 @@ void MainGame::initSystems() {
 	_window.create("Test Engine", _screenWidth, _screenHeight, 0);
 	initShaders();
 	_spriteBatch.init();
+	_fpsLimiter.init(_maxFPS);
+	srand(time(0));
 }
 
 void MainGame::initShaders() {
@@ -52,22 +71,18 @@ void MainGame::initShaders() {
 
 void MainGame::gameLoop() {
 	while (_gameState != GameState::EXIT) {
-		float startTicks = SDL_GetTicks();
+		_fpsLimiter.begin();
 		processInput();
 		_camera.update();
 		drawGame();
-		calculateFPS();
+		_fps = _fpsLimiter.end();
 		static int frameCounter = 0;
 		if (frameCounter == 10) {
-			std::cout << _fps << std::endl;
+			std::cout << "FPS: "<< _fps << std::endl;
+			std::cout << "SpriteCount: " << _sprites.size() << std::endl;
 			frameCounter = 0;
 		}
 		frameCounter++;
-
-		float frameTicks = SDL_GetTicks() - startTicks;
-		if (1000.0f / _maxFPS > frameTicks) {
-			SDL_Delay(1000.0f / _maxFPS - frameTicks);
-		}
 	}
 }
 
@@ -81,26 +96,37 @@ void MainGame::processInput() {
 		case SDL_MOUSEMOTION:
 			break;
 		case SDL_KEYDOWN:
-			switch (evnt.key.keysym.sym) {
-			case SDLK_w:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(0, 10.0 / _camera.getScale()));
-				break;
-			case SDLK_s:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(0, -10.0 / _camera.getScale()));
-				break;
-			case SDLK_a:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(-10.0 / _camera.getScale(), 0));
-				break;
-			case SDLK_d:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(10.0 / _camera.getScale(), 0));
-				break;
-			case SDLK_q:
-				_camera.setScale(_camera.getScale()*2);
-				break;
-			case SDLK_e:
-				_camera.setScale(_camera.getScale()/2);
-				break;
-			}
+			_inputManager.pressKey(evnt.key.keysym.sym);
+			break;
+		case SDL_KEYUP:
+			_inputManager.releaseKey(evnt.key.keysym.sym);
+			break;
+		}
+	}
+	if (_inputManager.isKeyPressed(SDLK_w)) {
+		_camera.setPosition(_camera.getPosition() + glm::vec2(0, 10.0 / _camera.getScale()));
+	}
+	if (_inputManager.isKeyPressed(SDLK_s)) {
+		_camera.setPosition(_camera.getPosition() + glm::vec2(0, -10.0 / _camera.getScale()));
+	}
+	if (_inputManager.isKeyPressed(SDLK_a)) {
+		_camera.setPosition(_camera.getPosition() + glm::vec2(-10.0 / _camera.getScale(), 0));
+	}
+	if (_inputManager.isKeyPressed(SDLK_d)) {
+		_camera.setPosition(_camera.getPosition() + glm::vec2(10.0 / _camera.getScale(), 0));
+	}
+	if (_inputManager.isKeyPressed(SDLK_q)) {
+		_camera.setScale(_camera.getScale()*1.03);
+	}
+	if (_inputManager.isKeyPressed(SDLK_e)) {
+		_camera.setScale(_camera.getScale()/1.03);
+	}
+	if (_inputManager.isKeyPressed(SDLK_SPACE)) {
+		GLint offX = _colorProgram.getUniformLocation("offsetX");
+		GLint offY = _colorProgram.getUniformLocation("offsetY");
+		for (int i = 0; i < 100; i++) {
+			_sprites.push_back(new Bengine::Sprite(offX, offY));
+			_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
 		}
 	}
 }
@@ -116,53 +142,15 @@ void MainGame::drawGame() {
 
 	glUniformMatrix4fv(orthoLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 	glUniform1i(textureLocation, 0);
-
-	//Bengine::Color col;
-	//col.r = 255;
-	//col.b = 255;
-	//col.g = 255;
-	//col.a = 255;
-	//_spriteBatch.begin();
-	//for (int i = 0; i < 25000; i++) {
-	//	glm::vec4 pos(0.1*i, 0.0f, 500.0f, 500.0f);
-	//	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
-	//	_spriteBatch.draw(pos, uv, _tex.id, 0.0f, col);
-	//}
-	//_spriteBatch.end();
-	//_spriteBatch.renderBatch();
+	for (int i = 0; i < 20000; i++) {
+		x[i] += rand()%50-25;
+	}
+	for (int i = 0; i < 20000; i++) {
+		y[i] += rand()%50-25;
+	}
+	_spriteBatch.renderBatch();
 	for (int i = 0; i < _sprites.size(); i++) {
-		_sprites[i]->draw();
+       		_sprites[i]->drawOffset(x[i], y[i]);
 	}
 	_window.swapBuffer();
-}
-
-void MainGame::calculateFPS() {
-	static const int NUM_SAMPLES = 10;
-	static float frameTimes[NUM_SAMPLES];
-	static int currentFrame = 0;
-
-	static float prevTicks = SDL_GetTicks();
-	
-	float currentTicks = SDL_GetTicks();
-
-	_frameTime = currentTicks - prevTicks;
-	frameTimes[currentFrame % NUM_SAMPLES] = _frameTime;
-	prevTicks = currentTicks;
-	int count;
-	currentFrame++;
-	if (currentFrame < NUM_SAMPLES) {
-		count = currentFrame;
-	} else {
-		count = NUM_SAMPLES;
-	}
-	float frameTimeAverage = 0;
-	for (int i = 0; i < NUM_SAMPLES; i++) {
-		frameTimeAverage += frameTimes[i];
-	}
-	frameTimeAverage /= count;
-	if (frameTimeAverage > 0) {
-		_fps = 1000.0f / frameTimeAverage;
-	} else {
-		_fps = 0.0f;
-	}
 }
