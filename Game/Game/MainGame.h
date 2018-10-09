@@ -42,7 +42,6 @@ private:
 	std::vector<Bengine::Sprite*> _sprites;
 	float x[26002];
 	float y[26002];
-	std::vector<Bengine::Sprite*> _sprites;
 
 	float _fps;
 	float _frameTime;
