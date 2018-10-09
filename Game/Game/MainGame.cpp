@@ -4,11 +4,13 @@
 #include <Bengine/ImageLoader.h>
 #include <Bengine/Errors.h>
 #include <Bengine/ResourceManager.h>
+
 #include <Bengine/InputManager.h>
 #include <string>
 #include <random>
 #include <time.h>
 
+#include <string>
 
 
 MainGame::MainGame() :
@@ -47,6 +49,16 @@ void MainGame::run() {
 		_spriteBatch.draw(pos, uv, _tex.id, 0.0f, col);
 	}
 	_spriteBatch.end();
+	_sprites.push_back(new Bengine::Sprite());
+	_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
+	_sprites.push_back(new Bengine::Sprite());
+	_sprites.back()->init(500, 250, 50, 50, "images/PlayerShip.png");
+	for (int i = 0; i < 26000; i++) {
+		_sprites.push_back(new Bengine::Sprite());
+		_sprites.back()->init(0.2*i, 0.1*i, 50, 50, "images/PlayerShip.png");
+	}
+	//_tex = Bengine::ResourceManager::getTexture("images/PlayerShip.png");
+
 	gameLoop();
 	for (int i = 0; i < _sprites.size(); i++) {
 		delete _sprites[i];
@@ -59,8 +71,10 @@ void MainGame::initSystems() {
 	_window.create("Test Engine", _screenWidth, _screenHeight, 0);
 	initShaders();
 	_spriteBatch.init();
+
 	_fpsLimiter.init(_maxFPS);
 	srand(time(0));
+
 }
 
 void MainGame::initShaders() {
@@ -83,6 +97,22 @@ void MainGame::gameLoop() {
 			frameCounter = 0;
 		}
 		frameCounter++;
+		float startTicks = SDL_GetTicks();
+		processInput();
+		_camera.update();
+		drawGame();
+		calculateFPS();
+		static int frameCounter = 0;
+		if (frameCounter == 10) {
+			std::cout << _fps << std::endl;
+			frameCounter = 0;
+		}
+		frameCounter++;
+
+		float frameTicks = SDL_GetTicks() - startTicks;
+		if (1000.0f / _maxFPS > frameTicks) {
+			SDL_Delay(1000.0f / _maxFPS - frameTicks);
+		}
 	}
 }
 
@@ -127,6 +157,28 @@ void MainGame::processInput() {
 		for (int i = 0; i < 100; i++) {
 			_sprites.push_back(new Bengine::Sprite(offX, offY));
 			_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
+
+			switch (evnt.key.keysym.sym) {
+			case SDLK_w:
+				_camera.setPosition(_camera.getPosition() + glm::vec2(0, 10.0 / _camera.getScale()));
+				break;
+			case SDLK_s:
+				_camera.setPosition(_camera.getPosition() + glm::vec2(0, -10.0 / _camera.getScale()));
+				break;
+			case SDLK_a:
+				_camera.setPosition(_camera.getPosition() + glm::vec2(-10.0 / _camera.getScale(), 0));
+				break;
+			case SDLK_d:
+				_camera.setPosition(_camera.getPosition() + glm::vec2(10.0 / _camera.getScale(), 0));
+				break;
+			case SDLK_q:
+				_camera.setScale(_camera.getScale()*2);
+				break;
+			case SDLK_e:
+				_camera.setScale(_camera.getScale()/2);
+				break;
+			}
+
 		}
 	}
 }
@@ -142,6 +194,7 @@ void MainGame::drawGame() {
 
 	glUniformMatrix4fv(orthoLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 	glUniform1i(textureLocation, 0);
+
 	for (int i = 0; i < 20000; i++) {
 		x[i] += rand()%50-25;
 	}

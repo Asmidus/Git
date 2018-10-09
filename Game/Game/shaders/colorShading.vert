@@ -8,6 +8,7 @@ out vec4 fragmentColor;
 out vec2 fragmentUV;
 
 uniform mat4 ortho;
+
 uniform float offsetX;
 uniform float offsetY;
 

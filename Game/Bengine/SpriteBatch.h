@@ -15,8 +15,8 @@ namespace Bengine {
 	class Glyph {
 	public:
 		Glyph() {};
-		Glyph(const glm::vec4 & destRect, const glm::vec4 & uvRect, GLuint Texture, float Depth, const Color & color);
 
+		Glyph(const glm::vec4 & destRect, const glm::vec4 & uvRect, GLuint Texture, float Depth, const Color & color);
 		GLuint texture;
 		float depth;
 

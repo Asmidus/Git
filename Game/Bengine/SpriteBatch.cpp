@@ -3,6 +3,7 @@
 #include <algorithm>
 
 namespace Bengine {
+
 	Glyph::Glyph(const glm::vec4 & destRect, const glm::vec4 & uvRect, GLuint Texture, float Depth, const Color & color) : texture(Texture), depth(Depth) {
 		topLeft.color = color;
 		topLeft.setPosition(destRect.x, destRect.y + destRect.w);
@@ -20,6 +21,7 @@ namespace Bengine {
 		botRight.setPosition(destRect.x + destRect.z, destRect.y);
 		botRight.setUV(uvRect.x + uvRect.z, uvRect.y);
 	}
+
 
 	SpriteBatch::SpriteBatch() : _vbo(0), _vao(0) {}
 
@@ -58,6 +60,7 @@ namespace Bengine {
 		glBindVertexArray(0);
 	}
 
+
 	//void SpriteBatch::renderBatch() {
 	//	glBindVertexArray(_vao);
 	//	for (int i = 0; i < _renderBatches.size(); i++) {
@@ -68,6 +71,7 @@ namespace Bengine {
 	//	}
 	//	glBindVertexArray(0);
 	//}
+
 
 	void SpriteBatch::createRenderBatches() {
 		std::vector<Vertex> vertices;

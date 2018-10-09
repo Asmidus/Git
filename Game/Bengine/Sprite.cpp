@@ -77,4 +77,5 @@ namespace Bengine {
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
+
 }
