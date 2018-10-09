@@ -1,5 +1,1 @@
-﻿  SpriteBatch.cpp
-c:\users\river\desktop\code\git\game\bengine\spritebatch.cpp(41): warning C4018: '<': signed/unsigned mismatch
-c:\users\river\desktop\code\git\game\bengine\spritebatch.cpp(54): warning C4018: '<': signed/unsigned mismatch
-c:\users\river\desktop\code\git\game\bengine\spritebatch.cpp(91): warning C4018: '<': signed/unsigned mismatch
-  Bengine.vcxproj -> C:\Users\River\Desktop\Code\Git\Game\Debug\Bengine.lib
+﻿

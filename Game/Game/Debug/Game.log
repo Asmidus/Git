@@ -1,7 +1,1 @@
-﻿  MainGame.cpp
-c:\users\river\desktop\code\git\game\game\maingame.cpp(51): warning C4018: '<': signed/unsigned mismatch
-c:\users\river\desktop\code\git\game\game\maingame.cpp(63): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\river\desktop\code\git\game\game\maingame.cpp(119): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\river\desktop\code\git\game\game\maingame.cpp(122): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\river\desktop\code\git\game\game\maingame.cpp(152): warning C4018: '<': signed/unsigned mismatch
-  Game.vcxproj -> C:\Users\River\Desktop\Code\Git\Game\Debug\Game.exe
+﻿
