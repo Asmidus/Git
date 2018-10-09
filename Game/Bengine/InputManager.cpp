@@ -2,7 +2,7 @@
 #include "InputManager.h"
 
 namespace Bengine {
-	InputManager::InputManager() {}
+	InputManager::InputManager() : _mouseCoords(0.0f) {}
 
 
 	InputManager::~InputManager() {}
@@ -22,5 +22,9 @@ namespace Bengine {
 		}
 		return false;
 		//return _keyMap[keyID];
+	}
+	void InputManager::setMouseCoords(float x, float y) {
+		_mouseCoords.x = x;
+		_mouseCoords.y = y;
 	}
 }

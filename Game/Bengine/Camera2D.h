@@ -18,6 +18,8 @@ namespace Bengine {
 		glm::vec2 getPosition() { return _position; }
 		float getScale() { return _scale; }
 		glm::mat4 getCameraMatrix() { return _cameraMatrix; }
+		glm::vec2 convertScreenToWorld(glm::vec2 screenCoords);
+
 	private:
 		glm::vec2 _position;
 		glm::mat4 _cameraMatrix;

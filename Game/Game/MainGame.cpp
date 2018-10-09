@@ -48,7 +48,7 @@ void MainGame::run() {
 	col.a = 255;
 	_spriteBatch.begin();
 	for (int i = 0; i < 20000; i++) {
-		glm::vec4 pos(50*i, 0.0f, 500.0f, 500.0f);
+		glm::vec4 pos(5*i, 0.0f, 500.0f, 500.0f);
 		glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
 		_spriteBatch.draw(pos, uv, _tex.id, 0.0f, col);
 	}
@@ -99,12 +99,19 @@ void MainGame::processInput() {
 			_gameState = GameState::EXIT;
 			break;
 		case SDL_MOUSEMOTION:
+			_inputManager.setMouseCoords(evnt.motion.x, evnt.motion.y);
 			break;
 		case SDL_KEYDOWN:
 			_inputManager.pressKey(evnt.key.keysym.sym);
 			break;
 		case SDL_KEYUP:
 			_inputManager.releaseKey(evnt.key.keysym.sym);
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			_inputManager.pressKey(evnt.button.button);
+			break;
+		case SDL_MOUSEBUTTONUP:
+			_inputManager.releaseKey(evnt.button.button);
 			break;
 		}
 	}
@@ -125,6 +132,13 @@ void MainGame::processInput() {
 	}
 	if (_inputManager.isKeyPressed(SDLK_e)) {
 		_camera.setScale(_camera.getScale()/1.03);
+	}
+	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT)) {
+		glm::vec2 mouseCoords = _inputManager.getMouseCoords();
+		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
+		std::cout << mouseCoords.x << " " << mouseCoords.y << std::endl;
+		x[0] = mouseCoords.x;
+		y[0] = mouseCoords.y;
 	}
 	if (_inputManager.isKeyPressed(SDLK_SPACE)) {
 		GLint offX = _colorProgram.getUniformLocation("offsetX");
@@ -148,12 +162,13 @@ void MainGame::drawGame() {
 	glUniformMatrix4fv(orthoLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 	glUniform1i(textureLocation, 0);
 
-	for (int i = 0; i < 20000; i++) {
-		x[i] += rand()%50-25;
-	}
-	for (int i = 0; i < 20000; i++) {
-		y[i] += rand()%50-25;
-	}
+	//for (int i = 1; i < 20000; i++) {
+	//	x[i] += rand()%50-25;
+	//}
+	//for (int i = 1; i < 20000; i++) {
+	//	y[i] += rand()%50-25;
+	//}
+
 	_spriteBatch.renderBatch();
 	for (int i = 0; i < _sprites.size(); i++) {
        		_sprites[i]->drawOffset(x[i], y[i]);

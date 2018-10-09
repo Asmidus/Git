@@ -122,8 +122,6 @@ namespace Bengine {
 			glGenBuffers(1, &_vbo);
 		}
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
