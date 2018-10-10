@@ -42,7 +42,6 @@ class Model
 		void draw(float xAngle, float yAngle);  //renders the objects we want to draw
 		void resetMatrix(float xAngle, float yAngle);
 		void drawCube();
-		void updateAnimation();
 		void setScale(float newScale) { scale = newScale; }
 		float getScale() { return scale; }
 

@@ -85,6 +85,7 @@ bool Model::init()
 	scale = 1.0f;
 	count = 2;
 	rotation = 0*(3.14159/180.0);
+	cout << "Use Q and E to zoom in and out and press SPACE to toggle the windmill animation" << endl;
 	return true;  //Everything got initialized
 }
 
@@ -92,7 +93,9 @@ bool Model::init()
 void Model::draw(float xAngle, float yAngle)
 {
 	mat4 PVMmatrix;
-	updateAnimation();
+	if (frameCount % 2 == 0 && trigger) {
+		rotation += 5*(3.14159/180.0);
+	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//Draw the center of the propeller
@@ -309,6 +312,7 @@ void Model::draw(float xAngle, float yAngle)
 	frameCount++;
 }
 
+//reset the matrix to its "origin" position but with the required rotation and scaling
 void Model::resetMatrix(float xAngle, float yAngle) {
 	model_matrix = mat4(1.0f);
 	model_matrix = rotate(model_matrix, (float)(yAngle*(3.14159 / 180.0)), vec3(0.0f, 1.0f, 0.0f));
@@ -317,8 +321,7 @@ void Model::resetMatrix(float xAngle, float yAngle) {
 }
 
 void Model::drawCube() {
-	//Remember that the matrices are applied to vertices in the opposite order
-	//in which they are specified below (i.e. model_matrix is applied first)
+	//Using a given position, draw a 2x2 cube of quads
 	mat4 PVMmatrix = projection_matrix * view_matrix * model_matrix;
 	glUniformMatrix4fv(PVM_matrixLoc, 1, GL_FALSE, value_ptr(PVMmatrix));
 	currentTexture->draw();
@@ -335,7 +338,6 @@ void Model::drawCube() {
 	currentTexture->draw();
 
 	model_matrix = translate(model_matrix, vec3(0.0f, 0.0f, 2.0f));
-	//model_matrix = rotate(model_matrix, (float)(-90.0*(3.14159/180.0)), vec3(0.0f, 1.0f, 0.0f));
 	PVMmatrix = projection_matrix * view_matrix * model_matrix;
 	glUniformMatrix4fv(PVM_matrixLoc, 1, GL_FALSE, value_ptr(PVMmatrix));
 	currentTexture->draw();
@@ -347,14 +349,7 @@ void Model::drawCube() {
 	currentTexture->draw();
 
 	model_matrix = translate(model_matrix, vec3(0.0f, 0.0f, -2.0f));
-	//model_matrix = rotate(model_matrix, (float)(-90.0*(3.14159/180.0)), vec3(1.0f, 0.0f, 0.0f));
 	PVMmatrix = projection_matrix * view_matrix * model_matrix;
 	glUniformMatrix4fv(PVM_matrixLoc, 1, GL_FALSE, value_ptr(PVMmatrix));
 	currentTexture->draw();
-}
-
-void Model::updateAnimation() {
-	if (frameCount % 2 == 0 && trigger) {
-		rotation += 5*(3.14159/180.0);
-	}
 }

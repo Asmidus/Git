@@ -70,8 +70,8 @@ namespace Bengine {
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 		glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
-		glUniform1f(_xLoc, offsetX);
-		glUniform1f(_yLoc, offsetY);
+		glUniform1f(0, offsetX);	//xOffset
+		glUniform1f(1, offsetY);	//yOffset
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}

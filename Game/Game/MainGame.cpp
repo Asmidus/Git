@@ -32,8 +32,9 @@ void MainGame::run() {
 	initSystems();
 	GLint offX = _colorProgram.getUniformLocation("offsetX");
 	GLint offY = _colorProgram.getUniformLocation("offsetY");
-	//_sprites.push_back(new Bengine::Sprite());
-	//_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
+	_sprites.push_back(new Bengine::Sprite(offX, offY));
+	_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
+	//_bullets.emplace_back(glm::vec2(1, 1), glm::vec2(1, 1), 5);
 	//_sprites.push_back(new Bengine::Sprite());
 	//_sprites.back()->init(500, 250, 50, 50, "images/PlayerShip.png");
 	//for (int i = 0; i < 20000; i++) {
@@ -79,12 +80,21 @@ void MainGame::gameLoop() {
 		_fpsLimiter.begin();
 		processInput();
 		_camera.update();
+		for (int i = 0; i < _bullets.size();) {
+			if (_bullets[i]->update()) {
+				_bullets[i] = _bullets.back();
+				_bullets.pop_back();
+			} else {
+				i++;
+			}
+		}
 		drawGame();
 		_fps = _fpsLimiter.end();
 		static int frameCounter = 0;
 		if (frameCounter == 10) {
 			std::cout << "FPS: "<< _fps << std::endl;
 			std::cout << "SpriteCount: " << _sprites.size() << std::endl;
+			std::cout << "BulletCount: " << _bullets.size() << std::endl;
 			frameCounter = 0;
 		}
 		frameCounter++;
@@ -137,8 +147,13 @@ void MainGame::processInput() {
 		glm::vec2 mouseCoords = _inputManager.getMouseCoords();
 		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
 		std::cout << mouseCoords.x << " " << mouseCoords.y << std::endl;
-		x[0] = mouseCoords.x;
-		y[0] = mouseCoords.y;
+		glm::vec2 direction = mouseCoords - glm::vec2(0, 0);
+		direction = glm::normalize(direction);
+		GLint offX = _colorProgram.getUniformLocation("offsetX");
+		GLint offY = _colorProgram.getUniformLocation("offsetY");
+		_bullets.push_back(new Bullet(direction, glm::vec2(0, 0), 5));
+		//x[0] = mouseCoords.x;
+		//y[0] = mouseCoords.y;
 	}
 	if (_inputManager.isKeyPressed(SDLK_SPACE)) {
 		GLint offX = _colorProgram.getUniformLocation("offsetX");
@@ -161,17 +176,14 @@ void MainGame::drawGame() {
 
 	glUniformMatrix4fv(orthoLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 	glUniform1i(textureLocation, 0);
-
-	//for (int i = 1; i < 20000; i++) {
-	//	x[i] += rand()%50-25;
-	//}
-	//for (int i = 1; i < 20000; i++) {
-	//	y[i] += rand()%50-25;
-	//}
-
-	_spriteBatch.renderBatch();
+	glUniform1f(0, 0);	//xOffset
+	glUniform1f(1, 0);	//yOffset
+	//_spriteBatch.renderBatch();
 	for (int i = 0; i < _sprites.size(); i++) {
-       		_sprites[i]->drawOffset(x[i], y[i]);
+       		_sprites[i]->drawOffset(i*5, i*5);
+	}
+	for (int i = 0; i < _bullets.size(); i++) {
+		_bullets[i]->draw();
 	}
 	_window.swapBuffer();
 }

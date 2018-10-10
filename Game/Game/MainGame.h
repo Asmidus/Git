@@ -10,6 +10,7 @@
 #include <Bengine/SpriteBatch.h>
 #include <Bengine/InputManager.h>
 #include <Bengine/Timing.h>
+#include "Bullet.h"
 
 enum class GameState {
 	PLAY,
@@ -40,8 +41,7 @@ private:
 	Bengine::InputManager _inputManager;
 	Bengine::FPSLimiter _fpsLimiter;
 	std::vector<Bengine::Sprite*> _sprites;
-	float x[26002];
-	float y[26002];
+	std::vector<Bullet*> _bullets;
 
 	float _fps;
 	float _frameTime;
