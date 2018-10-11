@@ -14,8 +14,8 @@
 
 
 MainGame::MainGame() :
-	_screenWidth(1600),
-	_screenHeight(800),
+	_screenWidth(800),
+	_screenHeight(600),
 	_gameState(GameState::PLAY),
 	_maxFPS(2500.0f) {
 	_camera.init(_screenWidth, _screenHeight);
@@ -32,7 +32,8 @@ void MainGame::run() {
 	initSystems();
 	GLint offX = _colorProgram.getUniformLocation("offsetX");
 	GLint offY = _colorProgram.getUniformLocation("offsetY");
-	_sprites.push_back(new Bengine::Sprite(offX, offY));
+	Bengine::Sprite::initLocation(offX, offY);
+	_sprites.push_back(new Bengine::Sprite());
 	_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
 	//_bullets.emplace_back(glm::vec2(1, 1), glm::vec2(1, 1), 5);
 	//_sprites.push_back(new Bengine::Sprite());
@@ -159,7 +160,7 @@ void MainGame::processInput() {
 		GLint offX = _colorProgram.getUniformLocation("offsetX");
 		GLint offY = _colorProgram.getUniformLocation("offsetY");
 		for (int i = 0; i < 100; i++) {
-			_sprites.push_back(new Bengine::Sprite(offX, offY));
+			_sprites.push_back(new Bengine::Sprite());
 			_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
 		}
 	}

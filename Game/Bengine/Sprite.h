@@ -9,21 +9,24 @@ namespace Bengine {
 	public:
 		Sprite();
 
-		Sprite(GLuint xLoc, GLuint yLoc) : _xLoc(xLoc), _yLoc(yLoc) { _vboID = 0; };
-
 		~Sprite();
 
 		void init(float x, float y, float width, float height, std::string texturePath);
 		void draw();
 
 		void drawOffset(float offsetX, float offsetY);
+
+		static void initLocation(GLuint x, GLuint y) {
+			_xLoc = x;
+			_yLoc = y;
+		}
 	private:
 		int _x;
 		int _y;
 		int _width;
 		int _height;
-		GLuint _xLoc;
-		GLuint _yLoc;
+		static GLuint _xLoc;
+		static GLuint _yLoc;
 
 		GLuint _vboID;
 		GLTexture _texture;
