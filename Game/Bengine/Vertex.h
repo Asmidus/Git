@@ -1,8 +1,14 @@
 #pragma once
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 namespace Bengine {
-	struct Color {
+	class Color {
+	public:
+		Color() {}
+		~Color() {}
+		Color(GLubyte red, GLubyte green, GLubyte blue) { r = red; g = green; b = blue; }
+		Color(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha) { r = red; g = green; b = blue; a = alpha; }
 		GLubyte r;
 		GLubyte g;
 		GLubyte b;
@@ -29,6 +35,10 @@ namespace Bengine {
 			color.g = g;
 			color.b = b;
 			color.a = a;
+		}
+
+		void setColor(Color col) {
+			color = col;
 		}
 
 		void setUV(float u, float v) {

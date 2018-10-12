@@ -11,6 +11,7 @@
 #include <Bengine/InputManager.h>
 #include <Bengine/Timing.h>
 #include "Bullet.h"
+#include "Player.h"
 
 enum class GameState {
 	PLAY,
@@ -34,6 +35,7 @@ private:
 	int _screenWidth;
 	int _screenHeight;
 	GameState _gameState;
+	//Player player;
 	Bengine::GLSLProgram _colorProgram;
 	Bengine::Camera2D _camera;
 	Bengine::SpriteBatch _spriteBatch;

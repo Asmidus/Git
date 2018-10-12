@@ -33,8 +33,8 @@ void MainGame::run() {
 	GLint offX = _colorProgram.getUniformLocation("offsetX");
 	GLint offY = _colorProgram.getUniformLocation("offsetY");
 	Bengine::Sprite::initLocation(offX, offY);
-	_sprites.push_back(new Bengine::Sprite());
-	_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
+	//_sprites.push_back(new Bengine::Sprite());
+	//_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
 	//_bullets.emplace_back(glm::vec2(1, 1), glm::vec2(1, 1), 5);
 	//_sprites.push_back(new Bengine::Sprite());
 	//_sprites.back()->init(500, 250, 50, 50, "images/PlayerShip.png");
@@ -42,19 +42,14 @@ void MainGame::run() {
 	//	_sprites.push_back(new Bengine::Sprite(offX, offY));
 	//	_sprites.back()->init(0.2*i, 0.1*i, 50, 50, "images/PlayerShip.png");
 	//}
-	_tex = Bengine::ResourceManager::getTexture("images/PlayerShip.png");
-	Bengine::Color col;
-	col.r = 255;
-	col.b = 255;
-	col.g = 255;
-	col.a = 255;
-	_spriteBatch.begin();
-	for (int i = 0; i < 20000; i++) {
-		glm::vec4 pos(5*i, 0.0f, 500.0f, 500.0f);
-		glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
-		_spriteBatch.draw(pos, uv, _tex.id, 0.0f, col);
-	}
-	_spriteBatch.end();
+	//_tex = Bengine::ResourceManager::getTexture("images/PlayerShip.png");
+	//_spriteBatch.begin();
+	//for (int i = 0; i < 20000; i++) {
+	//	glm::vec4 pos(5*i, 0.0f, 500.0f, 500.0f);
+	//	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
+	//	_spriteBatch.draw(pos, uv, _tex.id, 0.0f, Bengine::Color(255, 255, 255));
+	//}
+	//_spriteBatch.end();
 	gameLoop();
 }
 
@@ -63,7 +58,7 @@ void MainGame::initSystems() {
 	Bengine::init();
 	_window.create("Test Engine", _screenWidth, _screenHeight, 0);
 	initShaders();
-	_spriteBatch.init();
+	//_spriteBatch.init();
 
 	_fpsLimiter.init(_maxFPS);
 	srand(time(0));
@@ -147,18 +142,11 @@ void MainGame::processInput() {
 	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT)) {
 		glm::vec2 mouseCoords = _inputManager.getMouseCoords();
 		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
-		std::cout << mouseCoords.x << " " << mouseCoords.y << std::endl;
-		glm::vec2 direction = mouseCoords - glm::vec2(0, 0);
+		glm::vec2 direction = mouseCoords - glm::vec2(0,0);
 		direction = glm::normalize(direction);
-		GLint offX = _colorProgram.getUniformLocation("offsetX");
-		GLint offY = _colorProgram.getUniformLocation("offsetY");
 		_bullets.push_back(new Bullet(direction, glm::vec2(0, 0), 5));
-		//x[0] = mouseCoords.x;
-		//y[0] = mouseCoords.y;
 	}
 	if (_inputManager.isKeyPressed(SDLK_SPACE)) {
-		GLint offX = _colorProgram.getUniformLocation("offsetX");
-		GLint offY = _colorProgram.getUniformLocation("offsetY");
 		for (int i = 0; i < 100; i++) {
 			_sprites.push_back(new Bengine::Sprite());
 			_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");

@@ -17,7 +17,7 @@ namespace Bengine {
 			std::cout << "Loaded texture" << std::endl;
 			return newTexture;
 		}
-		std::cout << "Used cached texture" << std::endl;
+		//std::cout << "Used cached texture" << std::endl;
 		return mit->second;
 	}
 }

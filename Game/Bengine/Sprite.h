@@ -11,6 +11,8 @@ namespace Bengine {
 
 		~Sprite();
 
+		void init(float x, float y, float width, float height, std::string texturePath, Color color);
+
 		void init(float x, float y, float width, float height, std::string texturePath);
 		void draw();
 

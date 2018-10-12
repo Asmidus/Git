@@ -15,7 +15,7 @@ namespace Bengine {
 		}
 	}
 
-	void Sprite::init(float x, float y, float width, float height, std::string texturePath) {
+	void Sprite::init(float x, float y, float width, float height, std::string texturePath, Color color) {
 		_x = x;
 		_y = y;
 		_width = width;
@@ -43,13 +43,17 @@ namespace Bengine {
 		vertexData[5].setUV(1.0f, 1.0f);
 
 		for (int i = 0; i < 6; i++) {
-			vertexData[i].setColor(255, 255, 255, 255);
+			vertexData[i].setColor(color);
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, _vboID);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STREAM_DRAW);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	void Sprite::init(float x, float y, float width, float height, std::string texturePath) {
+		init(x, y, width, height, texturePath, Color(255, 255, 255));
 	}
 
 	void Sprite::draw() {
@@ -70,8 +74,8 @@ namespace Bengine {
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 		glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
-		glUniform1f(_xLoc, offsetX);	//xOffset
-		glUniform1f(_yLoc, offsetY);	//yOffset
+		glUniform1f(_xLoc, offsetX);
+		glUniform1f(_yLoc, offsetY);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
