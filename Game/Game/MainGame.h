@@ -12,6 +12,7 @@
 #include <Bengine/Timing.h>
 #include "Bullet.h"
 #include "Player.h"
+#include <list>
 
 enum class GameState {
 	PLAY,
@@ -35,7 +36,7 @@ private:
 	int _screenWidth;
 	int _screenHeight;
 	GameState _gameState;
-	//Player player;
+	Player player;
 	Bengine::GLSLProgram _colorProgram;
 	Bengine::Camera2D _camera;
 	Bengine::SpriteBatch _spriteBatch;
@@ -43,7 +44,8 @@ private:
 	Bengine::InputManager _inputManager;
 	Bengine::FPSLimiter _fpsLimiter;
 	std::vector<Bengine::Sprite*> _sprites;
-	std::vector<Bullet*> _bullets;
+	//std::vector<Bullet> _bullets;
+	std::list<Bullet> _bullets;
 
 	float _fps;
 	float _frameTime;

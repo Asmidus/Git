@@ -5,10 +5,10 @@
 class Bullet {
 public:
 	Bullet();
-	Bullet(glm::vec2 direction, glm::vec2 position, float speed);
+	Bullet(glm::vec2 position, glm::vec2 direction, float speed);
 	~Bullet();
 
-	void init(glm::vec2 direction, glm::vec2 position, float speed);
+	void init(glm::vec2 position, glm::vec2 direction, float speed);
 	void draw();
 	bool update();
 private:

@@ -4,14 +4,11 @@
 #include <Bengine/ImageLoader.h>
 #include <Bengine/Errors.h>
 #include <Bengine/ResourceManager.h>
-
 #include <Bengine/InputManager.h>
 #include <string>
 #include <random>
 #include <time.h>
-
 #include <string>
-
 
 MainGame::MainGame() :
 	_screenWidth(800),
@@ -33,6 +30,7 @@ void MainGame::run() {
 	GLint offX = _colorProgram.getUniformLocation("offsetX");
 	GLint offY = _colorProgram.getUniformLocation("offsetY");
 	Bengine::Sprite::initLocation(offX, offY);
+	player.init();
 	//_sprites.push_back(new Bengine::Sprite());
 	//_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
 	//_bullets.emplace_back(glm::vec2(1, 1), glm::vec2(1, 1), 5);
@@ -74,17 +72,16 @@ void MainGame::initShaders() {
 void MainGame::gameLoop() {
 	while (_gameState != GameState::EXIT) {
 		_fpsLimiter.begin();
+		drawGame();
 		processInput();
 		_camera.update();
-		for (int i = 0; i < _bullets.size();) {
-			if (_bullets[i]->update()) {
-				_bullets[i] = _bullets.back();
-				_bullets.pop_back();
+		for (auto it = _bullets.begin(); it != _bullets.end();) {
+			if ((*it).update()) {
+				it = _bullets.erase(it);
 			} else {
-				i++;
+				it++;
 			}
 		}
-		drawGame();
 		_fps = _fpsLimiter.end();
 		static int frameCounter = 0;
 		if (frameCounter == 10) {
@@ -122,16 +119,20 @@ void MainGame::processInput() {
 		}
 	}
 	if (_inputManager.isKeyPressed(SDLK_w)) {
-		_camera.setPosition(_camera.getPosition() + glm::vec2(0, 10.0 / _camera.getScale()));
+		_camera.setPosition(_camera.getPosition() + glm::vec2(0, 10.0));
+		player.setPosition(player.getPosition() + glm::vec2(0, 10.0));
 	}
 	if (_inputManager.isKeyPressed(SDLK_s)) {
-		_camera.setPosition(_camera.getPosition() + glm::vec2(0, -10.0 / _camera.getScale()));
+		_camera.setPosition(_camera.getPosition() + glm::vec2(0, -10.0));
+		player.setPosition(player.getPosition() + glm::vec2(0, -10.0));
 	}
 	if (_inputManager.isKeyPressed(SDLK_a)) {
-		_camera.setPosition(_camera.getPosition() + glm::vec2(-10.0 / _camera.getScale(), 0));
+		_camera.setPosition(_camera.getPosition() + glm::vec2(-10.0, 0));
+		player.setPosition(player.getPosition() + glm::vec2(-10.0, 0));
 	}
 	if (_inputManager.isKeyPressed(SDLK_d)) {
-		_camera.setPosition(_camera.getPosition() + glm::vec2(10.0 / _camera.getScale(), 0));
+		_camera.setPosition(_camera.getPosition() + glm::vec2(10.0, 0));
+		player.setPosition(player.getPosition() + glm::vec2(10.0, 0));
 	}
 	if (_inputManager.isKeyPressed(SDLK_q)) {
 		_camera.setScale(_camera.getScale()*1.03);
@@ -142,9 +143,9 @@ void MainGame::processInput() {
 	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT)) {
 		glm::vec2 mouseCoords = _inputManager.getMouseCoords();
 		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
-		glm::vec2 direction = mouseCoords - glm::vec2(0,0);
+		glm::vec2 direction = mouseCoords - player.getPosition();
 		direction = glm::normalize(direction);
-		_bullets.push_back(new Bullet(direction, glm::vec2(0, 0), 5));
+		_bullets.emplace_back(direction, player.getPosition(), 5);
 	}
 	if (_inputManager.isKeyPressed(SDLK_SPACE)) {
 		for (int i = 0; i < 100; i++) {
@@ -171,8 +172,9 @@ void MainGame::drawGame() {
 	for (int i = 0; i < _sprites.size(); i++) {
        		_sprites[i]->drawOffset(i*5, i*5);
 	}
-	for (int i = 0; i < _bullets.size(); i++) {
-		_bullets[i]->draw();
+	for (auto it = _bullets.begin(); it != _bullets.end(); it++) {
+		(*it).draw();
 	}
+	player.draw();
 	_window.swapBuffer();
 }

@@ -18,6 +18,8 @@ namespace Bengine {
 
 		void drawOffset(float offsetX, float offsetY);
 
+		glm::vec2 getDimensions();
+
 		static void initLocation(GLuint x, GLuint y) {
 			_xLoc = x;
 			_yLoc = y;

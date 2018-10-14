@@ -53,7 +53,7 @@ namespace Bengine {
 	}
 
 	void Sprite::init(float x, float y, float width, float height, std::string texturePath) {
-		init(x, y, width, height, texturePath, Color(255, 255, 255));
+		init(x, y, width, height, texturePath, Color(255, 255, 255, 255));
 	}
 
 	void Sprite::draw() {
@@ -69,8 +69,6 @@ namespace Bengine {
 	void Sprite::drawOffset(float offsetX, float offsetY) {
 		glBindTexture(GL_TEXTURE_2D, _texture.id);
 		glBindBuffer(GL_ARRAY_BUFFER, _vboID);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 		glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
@@ -80,4 +78,7 @@ namespace Bengine {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
+	glm::vec2 Sprite::getDimensions() {
+		return glm::vec2(_width, _height);
+	}
 }

@@ -4,13 +4,13 @@
 
 Bullet::Bullet() {}
 
-Bullet::Bullet(glm::vec2 direction, glm::vec2 position, float speed) {
+Bullet::Bullet(glm::vec2 position, glm::vec2 direction, float speed) {
 	init(direction, position, speed);
 }
 
 Bullet::~Bullet() {}
 
-void Bullet::init(glm::vec2 direction, glm::vec2 position, float speed) {
+void Bullet::init(glm::vec2 position, glm::vec2 direction, float speed) {
 	_lifeTime = 1000;
 	_direction = direction;
 	_position = position;
@@ -19,7 +19,7 @@ void Bullet::init(glm::vec2 direction, glm::vec2 position, float speed) {
 }
 
 void Bullet::draw() {
-	_sprite.drawOffset(_position.x, _position.y);
+	_sprite.drawOffset(_position.x - _sprite.getDimensions().x/2, _position.y - _sprite.getDimensions().y/2);
 }
 
 bool Bullet::update() {
