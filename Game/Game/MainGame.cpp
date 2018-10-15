@@ -16,6 +16,8 @@ MainGame::MainGame() :
 	_gameState(GameState::PLAY),
 	_maxFPS(2500.0f) {
 	_camera.init(_screenWidth, _screenHeight);
+	_bullets.reserve(100*sizeof(Bullet));
+	_humans.reserve(100*sizeof(Agent));
 }
 
 
@@ -75,12 +77,16 @@ void MainGame::gameLoop() {
 		drawGame();
 		processInput();
 		_camera.update();
-		for (auto it = _bullets.begin(); it != _bullets.end();) {
-			if ((*it).update()) {
-				it = _bullets.erase(it);
-			} else {
-				it++;
+		for (int i = 0; i < _bullets.size();i++) {
+			if (_bullets[i].update()) {
+				Bullet temp = _bullets[i];
+				_bullets[i] = _bullets.back();
+				_bullets.back() = temp;
+				_bullets.pop_back();
 			}
+		}
+		for (int i = 0; i < _humans.size(); i++) {
+			_humans[i].update();
 		}
 		_fps = _fpsLimiter.end();
 		static int frameCounter = 0;
@@ -88,6 +94,7 @@ void MainGame::gameLoop() {
 			std::cout << "FPS: "<< _fps << std::endl;
 			std::cout << "SpriteCount: " << _sprites.size() << std::endl;
 			std::cout << "BulletCount: " << _bullets.size() << std::endl;
+			std::cout << "HumanCount: " << _humans.size() << std::endl;
 			frameCounter = 0;
 		}
 		frameCounter++;
@@ -145,13 +152,14 @@ void MainGame::processInput() {
 		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
 		glm::vec2 direction = mouseCoords - player.getPosition();
 		direction = glm::normalize(direction);
-		_bullets.emplace_back(direction, player.getPosition(), 5);
+		_bullets.emplace_back(player.getPosition(), direction, 15);;
 	}
 	if (_inputManager.isKeyPressed(SDLK_SPACE)) {
-		for (int i = 0; i < 100; i++) {
-			_sprites.push_back(new Bengine::Sprite());
-			_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
-		}
+		//for (int i = 0; i < 100; i++) {
+		//	_sprites.push_back(new Bengine::Sprite());
+		//	_sprites.back()->init(0, 0, 500, 500, "images/PlayerShip.png");
+		//}
+		_humans.emplace_back();
 	}
 }
 
@@ -172,8 +180,11 @@ void MainGame::drawGame() {
 	for (int i = 0; i < _sprites.size(); i++) {
        		_sprites[i]->drawOffset(i*5, i*5);
 	}
-	for (auto it = _bullets.begin(); it != _bullets.end(); it++) {
-		(*it).draw();
+	for (int i = 0; i < _bullets.size();i++) {
+		_bullets[i].draw();
+	}
+	for (int i = 0; i < _humans.size(); i++) {
+		_humans[i].draw();
 	}
 	player.draw();
 	_window.swapBuffer();

@@ -5,15 +5,15 @@
 Bullet::Bullet() {}
 
 Bullet::Bullet(glm::vec2 position, glm::vec2 direction, float speed) {
-	init(direction, position, speed);
+	init(position, direction, speed);
 }
 
 Bullet::~Bullet() {}
 
 void Bullet::init(glm::vec2 position, glm::vec2 direction, float speed) {
 	_lifeTime = 1000;
-	_direction = direction;
 	_position = position;
+	_direction = direction;
 	_speed = speed;
 	_sprite.init(0, 0, 10, 10, "images/Circle.png");
 }

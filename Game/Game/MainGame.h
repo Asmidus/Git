@@ -12,6 +12,7 @@
 #include <Bengine/Timing.h>
 #include "Bullet.h"
 #include "Player.h"
+#include "Agent.h"
 #include <list>
 
 enum class GameState {
@@ -45,7 +46,8 @@ private:
 	Bengine::FPSLimiter _fpsLimiter;
 	std::vector<Bengine::Sprite*> _sprites;
 	//std::vector<Bullet> _bullets;
-	std::list<Bullet> _bullets;
+	std::vector<Bullet> _bullets;
+	std::vector<Agent> _humans;
 
 	float _fps;
 	float _frameTime;
