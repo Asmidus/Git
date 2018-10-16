@@ -31,6 +31,8 @@ void MainGame::run() {
 	GLint offX = _colorProgram.getUniformLocation("offsetX");
 	GLint offY = _colorProgram.getUniformLocation("offsetY");
 	Bengine::Sprite::initLocation(offX, offY);
+	_sprites.push_back(new Bengine::Sprite());
+	_sprites.back()->init(0, 0, 50, 50, "images/PlayerShip.png");
 	player = new Player();
 	player->init(&_inputManager);
 	_humans.push_back(player);
@@ -133,13 +135,13 @@ void MainGame::drawGame() {
 
 	glUniformMatrix4fv(orthoLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 	glUniform1i(textureLocation, 0);
-	glUniform1f(0, 0);	//xOffset
-	glUniform1f(1, 0);	//yOffset
+	glUniform1f(_colorProgram.getUniformLocation("offsetX"), 0);	//xOffset
+	glUniform1f(_colorProgram.getUniformLocation("offsetY"), 0);	//yOffset
 	//_spriteBatch.renderBatch();
 	_levels[0]->draw();
-	//for (int i = 0; i < _sprites.size(); i++) {
- //      		_sprites[i]->drawOffset(i*5, i*5);
-	//}
+	for (int i = 0; i < _sprites.size(); i++) {
+       		_sprites[i]->drawOffset(i*5, i*5);
+	}
 	//for (int i = 0; i < _bullets.size();i++) {
 	//	_bullets[i]->draw();
 	//}
