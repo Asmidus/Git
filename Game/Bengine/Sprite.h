@@ -11,6 +11,8 @@ namespace Bengine {
 
 		~Sprite();
 
+		void destroy();
+
 		void init(float x, float y, float width, float height, std::string texturePath, Color color);
 
 		void init(float x, float y, float width, float height, std::string texturePath);
@@ -23,7 +25,9 @@ namespace Bengine {
 		static void initLocation(GLuint x, GLuint y) {
 			_xLoc = x;
 			_yLoc = y;
+			_initialized = true;
 		}
+		static bool isInitialized() { return _initialized; }
 	private:
 		int _x;
 		int _y;
@@ -31,6 +35,7 @@ namespace Bengine {
 		int _height;
 		static GLuint _xLoc;
 		static GLuint _yLoc;
+		static bool _initialized;
 
 		GLuint _vboID;
 		GLTexture _texture;

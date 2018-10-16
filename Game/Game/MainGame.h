@@ -47,7 +47,7 @@ private:
 	std::vector<Bengine::Sprite*> _sprites;
 	//std::vector<Bullet> _bullets;
 	std::vector<Bullet> _bullets;
-	std::vector<Agent> _humans;
+	std::vector<Human> _humans;
 
 	float _fps;
 	float _frameTime;

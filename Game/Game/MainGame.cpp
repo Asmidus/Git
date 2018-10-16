@@ -10,14 +10,8 @@
 #include <time.h>
 #include <string>
 
-MainGame::MainGame() :
-	_screenWidth(800),
-	_screenHeight(600),
-	_gameState(GameState::PLAY),
-	_maxFPS(2500.0f) {
+MainGame::MainGame() : _screenWidth(800), _screenHeight(600), _gameState(GameState::PLAY), _maxFPS(2500.0f) {
 	_camera.init(_screenWidth, _screenHeight);
-	_bullets.reserve(100*sizeof(Bullet));
-	_humans.reserve(100*sizeof(Agent));
 }
 
 
@@ -152,7 +146,7 @@ void MainGame::processInput() {
 		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
 		glm::vec2 direction = mouseCoords - player.getPosition();
 		direction = glm::normalize(direction);
-		_bullets.emplace_back(player.getPosition(), direction, 15);;
+		_bullets.emplace_back(player.getPosition(), direction, 15);
 	}
 	if (_inputManager.isKeyPressed(SDLK_SPACE)) {
 		//for (int i = 0; i < 100; i++) {

@@ -26,6 +26,7 @@ bool Bullet::update() {
 	_position += _direction * _speed;
 	if (_lifeTime == 0) {
 		return true;
+		_sprite.destroy();
 	}
 	_lifeTime--;
 	return false;

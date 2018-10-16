@@ -9,7 +9,9 @@ namespace Bengine {
 	}
 
 
-	Sprite::~Sprite() {
+	Sprite::~Sprite() {}
+
+	void Sprite::destroy() {
 		if (_vboID != 0) {
 			glDeleteBuffers(1, &_vboID);
 		}

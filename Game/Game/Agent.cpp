@@ -3,15 +3,18 @@
 
 
 Agent::Agent() {
-	init();
+	if (Bengine::Sprite::isInitialized()) {
+		init();
+	}
 }
 
 
 Agent::~Agent() {}
 
 void Agent::init() {
-	_sprite.init(-25, -25, 50, 50, "images/Circle.png", Bengine::Color(255, 255, 0, 255));
+	_width = _height = 50;
 	_position = glm::vec2(0, 0);
+	_sprite.init(0, 0, _width, _height, "images/Circle.png", Bengine::Color(255, 255, 0, 255));
 }
 
 void Agent::update() {
@@ -19,5 +22,5 @@ void Agent::update() {
 }
 
 void Agent::draw() {
-	_sprite.drawOffset(_position.x, _position.y);
+	_sprite.drawOffset(_position.x - _sprite.getDimensions().x/2, _position.y - _sprite.getDimensions().y/2);
 }

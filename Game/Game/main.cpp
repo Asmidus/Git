@@ -5,6 +5,7 @@
 
 GLuint Bengine::Sprite::_xLoc = 0;
 GLuint Bengine::Sprite::_yLoc = 0;
+bool Bengine::Sprite::_initialized = false;
 
 
 int main(int argc, char** argv) {
