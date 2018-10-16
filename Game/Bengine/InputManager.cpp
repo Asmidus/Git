@@ -7,15 +7,15 @@ namespace Bengine {
 
 	InputManager::~InputManager() {}
 
-	void Bengine::InputManager::pressKey(unsigned int keyID) {
+	void InputManager::pressKey(unsigned int keyID) {
 		_keyMap[keyID] = true;
 	}
 
-	void Bengine::InputManager::releaseKey(unsigned int keyID) {
+	void InputManager::releaseKey(unsigned int keyID) {
 		_keyMap[keyID] = false;
 	}
 
-	bool Bengine::InputManager::isKeyPressed(unsigned int keyID) {
+	bool InputManager::isKeyPressed(unsigned int keyID) {
 		auto it = _keyMap.find(keyID);
 		if (it != _keyMap.end()) {
 			return it->second;

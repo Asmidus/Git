@@ -60,19 +60,6 @@ namespace Bengine {
 		glBindVertexArray(0);
 	}
 
-
-	//void SpriteBatch::renderBatch() {
-	//	glBindVertexArray(_vao);
-	//	for (int i = 0; i < _renderBatches.size(); i++) {
-	//		glBindTexture(GL_TEXTURE_2D, _renderBatches[i].texture);
-	//		for (int j = 0; j < _renderBatches[i].numVertices/6 - 1; j++) {
-	//			glDrawArrays(GL_TRIANGLES, j*6, (j+1)*6);
-	//		}
-	//	}
-	//	glBindVertexArray(0);
-	//}
-
-
 	void SpriteBatch::createRenderBatches() {
 		std::vector<Vertex> vertices;
 		vertices.resize(_glyphPointers.size() * 6);
@@ -94,7 +81,7 @@ namespace Bengine {
 		int cg = 1; //current glyph
 		for (int cg = 1; cg < _glyphPointers.size(); cg++) {
 			if (_glyphPointers[cg]->texture != _glyphPointers[cg - 1]->texture) {
-				_renderBatches.emplace_back(offset, 6, _glyphPointers[0]->texture);
+				_renderBatches.emplace_back(offset, 6, _glyphPointers[cg]->texture);
 			} else {
 				_renderBatches.back().numVertices += 6;
 			}
