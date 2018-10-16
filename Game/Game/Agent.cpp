@@ -1,5 +1,6 @@
 #include "Agent.h"
 #include <algorithm>
+#include <iostream>
 
 
 Agent::Agent() {
@@ -59,7 +60,7 @@ void Agent::collideWithTile(glm::vec2 tilePos) {
 	const float TILE_RADIUS = (float)TILE_SIZE/2;
 	const float MIN_DISTANCE = AGENT_RADIUS + TILE_RADIUS;
 	//glm::vec2 position(_position.x - _width/2, _position.y - _height/2);
-	glm::vec2 distVec = _position - tilePos;
+	glm::vec2 distVec = glm::vec2(_position.x, _position.y) - tilePos;
 	float xdepth = MIN_DISTANCE - abs(distVec.x);
 	float ydepth = MIN_DISTANCE - abs(distVec.y);
 
