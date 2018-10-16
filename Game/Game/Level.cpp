@@ -27,7 +27,7 @@ Level::Level(const std::string& fileName) {
 			//grab the tile
 			char tile = _levelData[y][x];
 			//get the destination
-			glm::vec4 destRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);	// -y to flip
+			glm::vec4 destRect(x * TILE_SIZE, -y * TILE_SIZE, TILE_SIZE, TILE_SIZE);	// -y to flip
 			//draw the appropriate tile
 			switch (tile) {
 			case 'B':
@@ -42,11 +42,11 @@ Level::Level(const std::string& fileName) {
 				break;
 			case '@':
 				_playerStartPos.x = x * TILE_SIZE + TILE_SIZE/2;
-				_playerStartPos.y = y * TILE_SIZE + TILE_SIZE/2;						// -y to flip
+				_playerStartPos.y = -y * TILE_SIZE + TILE_SIZE/2;						// -y to flip
 				_levelData[y][x] = '.';
 				break;
 			case 'Z':
-				_zombieStartPos.emplace_back(x * TILE_SIZE + TILE_SIZE/2, y * TILE_SIZE + TILE_SIZE/2);	//-y to flip
+				_zombieStartPos.emplace_back(x * TILE_SIZE + TILE_SIZE/2, -y * TILE_SIZE + TILE_SIZE/2);	//-y to flip
 				_levelData[y][x] = '.';
 				break;
 			case '.':

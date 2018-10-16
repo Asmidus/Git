@@ -46,12 +46,13 @@ void Agent::draw() {
 }
 
 void Agent::checkTilePosition(const std::vector<std::string>& levelData, std::vector<glm::vec2>& collideTilePositions, float x, float y) {
-	glm::vec2 cornerPos = glm::vec2(floor(x / (float)TILE_SIZE), floor(y / (float)TILE_SIZE));
+	glm::vec2 cornerPos = glm::vec2(floor(x / (float)TILE_SIZE), floor(52 + y / (float)TILE_SIZE));
+	glm::vec2 z = glm::vec2(floor(x / (float)TILE_SIZE), floor(y / (float)TILE_SIZE));
 	if (cornerPos.x < 0 || cornerPos.y < 0 || cornerPos.x >= levelData[0].size() || cornerPos.y >= levelData.size()) {
 		return;
 	}
 	if (levelData[abs(cornerPos.y)][cornerPos.x] != '.') {
-		collideTilePositions.push_back(cornerPos * (float)TILE_SIZE + glm::vec2(TILE_SIZE/2, TILE_SIZE/2));
+		collideTilePositions.push_back(z * (float)TILE_SIZE + glm::vec2(TILE_SIZE/2, TILE_SIZE/2));
 	}
 }
 
