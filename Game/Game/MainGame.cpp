@@ -20,9 +20,9 @@ MainGame::~MainGame() {
 		delete _levels[i];
 	}
 	//player.destroy();
-	//for (int i = 0; i < _humans.size(); i++) {
-	//	_humans[i]->destroy();
-	//}
+	for (int i = 0; i < _humans.size(); i++) {
+		_humans[i]->destroy();
+	}
 }
 
 void MainGame::run() {
@@ -31,13 +31,11 @@ void MainGame::run() {
 	GLint offX = _colorProgram.getUniformLocation("offsetX");
 	GLint offY = _colorProgram.getUniformLocation("offsetY");
 	Bengine::Sprite::initLocation(offX, offY);
-	_sprites.push_back(new Bengine::Sprite());
-	_sprites.back()->init(0, 0, 50, 50, "images/PlayerShip.png");
-	player = new Player();
-	player->init(&_inputManager);
-	_humans.push_back(player);
 	_levels.push_back(new Level("Levels/level1.txt"));
-	player->setPosition(_levels[0]->getPlayerStartPos());
+	player = new Player();
+	player->init(10.0f, _levels[0]->getPlayerStartPos(), &_inputManager);
+	_humans.push_back(player);
+	_humans.push_back(new Human(1.0f, glm::vec2(64*2, 64*50)));
 	gameLoop();
 }
 

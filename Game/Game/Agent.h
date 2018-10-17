@@ -11,6 +11,15 @@ public:
 	Agent();
 	~Agent();
 
+	struct compareTile {
+		compareTile(const Agent& a) : agent(a) {}
+		const Agent& agent;
+
+		bool operator()(const glm::vec2& a, const glm::vec2& b) {
+			return glm::length(a - agent._position) < glm::length(b - agent._position);
+		}
+	};
+
 	void init();
 	virtual void destroy();
 	virtual void update(const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombies);
