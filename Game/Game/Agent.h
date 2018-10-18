@@ -33,6 +33,8 @@ public:
 	glm::vec2 getDimensions() { return _sprite.getDimensions(); }
 	void setSprite(Bengine::Sprite sprite) { _sprite = sprite; }
 	Bengine::Sprite getSprite() { return _sprite; }
+	void setSpeed(float speed) { _speed = speed; }
+	float getSpeed() { return _speed; }
 protected:
 	void checkTilePosition(const std::vector<std::string>& levelData, std::vector<glm::vec2>& collideTilePositions, float x, float y);
 	void collideWithTile(glm::vec2 tilePos);

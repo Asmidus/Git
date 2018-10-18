@@ -36,6 +36,8 @@ void Player::update(const std::vector<std::string>& levelData, std::vector<Human
 	if (x != 0 || y != 0) {
 		_direction = glm::normalize(glm::vec2(x, y));
 		_position += _direction * _speed;
+	} else {
+		_direction = glm::vec2(0, 0);
 	}
 	collideWithLevel(levelData);
 }

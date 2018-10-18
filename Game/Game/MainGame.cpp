@@ -22,6 +22,11 @@ MainGame::~MainGame() {
 	//player.destroy();
 	for (int i = 0; i < _humans.size(); i++) {
 		_humans[i]->destroy();
+		delete _humans[i];
+	}
+	for (int i = 0; i < _bullets.size(); i++) {
+		_bullets[i]->destroy();
+		delete _bullets[i];
 	}
 }
 
@@ -68,6 +73,7 @@ void MainGame::gameLoop() {
 				Bullet* temp = _bullets[i];
 				_bullets[i] = _bullets.back();
 				_bullets.back() = temp;
+				delete _bullets.back();
 				_bullets.pop_back();
 			}
 		}
@@ -120,6 +126,18 @@ void MainGame::processInput() {
 	if (_inputManager.isKeyPressed(SDLK_e)) {
 		_camera.setScale(_camera.getScale()/1.03);
 	}
+	static int counter = 0;
+	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT) && counter%10 == 0) {
+		glm::vec2 mouseCoords = _inputManager.getMouseCoords();
+		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
+		glm::vec2 direction = mouseCoords - player->getPosition();
+		direction = glm::normalize(direction);
+		float speed = 25;
+		glm::vec2 vec = direction * speed;
+		vec = vec + (player->getDirection() * player->getSpeed());
+		_bullets.emplace_back(new Bullet(player->getPosition(), vec, 1));
+	}
+	counter++;
 }
 
 void MainGame::drawGame() {
@@ -140,9 +158,9 @@ void MainGame::drawGame() {
 	for (int i = 0; i < _sprites.size(); i++) {
        		_sprites[i]->drawOffset(i*5, i*5);
 	}
-	//for (int i = 0; i < _bullets.size();i++) {
-	//	_bullets[i]->draw();
-	//}
+	for (int i = 0; i < _bullets.size();i++) {
+		_bullets[i]->draw();
+	}
 	for (int i = 0; i < _humans.size(); i++) {
 		_humans[i]->draw();
 	}

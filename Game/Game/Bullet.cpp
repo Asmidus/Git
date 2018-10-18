@@ -18,6 +18,10 @@ void Bullet::init(glm::vec2 position, glm::vec2 direction, float speed) {
 	_sprite.init(0, 0, 10, 10, "images/Circle.png");
 }
 
+void Bullet::destroy() {
+	_sprite.destroy();
+}
+
 void Bullet::draw() {
 	_sprite.drawOffset(_position.x - _sprite.getDimensions().x/2, _position.y - _sprite.getDimensions().y/2);
 }

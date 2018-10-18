@@ -9,6 +9,7 @@ public:
 	~Bullet();
 
 	void init(glm::vec2 position, glm::vec2 direction, float speed);
+	void destroy();
 	void draw();
 	bool update();
 
