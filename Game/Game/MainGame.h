@@ -29,6 +29,7 @@ public:
 
 private:
 	void initSystems();
+	void initLevel();
 	void initShaders();
 	void gameLoop();
 	void updateAgents();

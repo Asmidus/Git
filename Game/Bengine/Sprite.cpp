@@ -20,7 +20,7 @@ namespace Bengine {
 	void Sprite::init(float x, float y, float width, float height, std::string texturePath, Color color) {
 		_x = x;
 		_y = y;
-		_width = width;
+		_size = width;
 		_height = height;
 		_texture = ResourceManager::getTexture(texturePath);
 
@@ -81,6 +81,6 @@ namespace Bengine {
 	}
 
 	glm::vec2 Sprite::getDimensions() {
-		return glm::vec2(_width, _height);
+		return glm::vec2(_size, _height);
 	}
 }

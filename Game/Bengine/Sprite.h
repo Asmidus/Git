@@ -31,7 +31,7 @@ namespace Bengine {
 	private:
 		int _x;
 		int _y;
-		int _width;
+		int _size;
 		int _height;
 		static GLuint _xLoc;
 		static GLuint _yLoc;

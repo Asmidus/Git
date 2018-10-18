@@ -36,10 +36,7 @@ void MainGame::run() {
 	GLint offX = _colorProgram.getUniformLocation("offsetX");
 	GLint offY = _colorProgram.getUniformLocation("offsetY");
 	Bengine::Sprite::initLocation(offX, offY);
-	_levels.push_back(new Level("Levels/level1.txt"));
-	player = new Player();
-	player->init(10.0f, _levels[0]->getPlayerStartPos(), &_inputManager);
-	_humans.push_back(player);
+	initLevel();
 	_humans.push_back(new Human(1.0f, glm::vec2(64*2, 64*50)));
 	gameLoop();
 }
@@ -49,9 +46,26 @@ void MainGame::initSystems() {
 	Bengine::init();
 	_window.create("Test Engine", _screenWidth, _screenHeight, 0);
 	initShaders();
+	_spriteBatch.init();
 	_fpsLimiter.init(_maxFPS);
 	srand(time(0));
 
+}
+
+void MainGame::initLevel() {
+	_levels.push_back(new Level("Levels/level1.txt"));
+	player = new Player();
+	player->init(10.0f, _levels[0]->getPlayerStartPos(), &_inputManager);
+	_humans.push_back(player);
+
+	static std::mt19937 randomEngine(time(nullptr));
+	static std::uniform_int_distribution<int> randX(1*TILE_SIZE + TILE_SIZE/2, (_levels[0]->getWidth() - 2)*TILE_SIZE + TILE_SIZE/2);
+	static std::uniform_int_distribution<int> randY(1*TILE_SIZE + TILE_SIZE/2, (_levels[0]->getHeight() - 2)*TILE_SIZE + TILE_SIZE/2);
+
+	for (int i = 0; i < _levels[0]->getNumHumans(); i++) {
+		_humans.push_back(new Human());
+		_humans.back()->init(5.0f, glm::vec2(randX(randomEngine), randY(randomEngine)));
+	}
 }
 
 void MainGame::initShaders() {
@@ -94,6 +108,11 @@ void MainGame::updateAgents() {
 	for (int i = 0; i < _humans.size(); i++) {
 		_humans[i]->update(_levels[0]->getLevelData(), _humans, _zombies);
 	}
+	for (int i = 0; i < _humans.size(); i++) {
+		for (int j = i + 1; j < _humans.size(); j++) {
+			_humans[i]->collideWithAgent(_humans[j]);
+		}
+	}
 }
 
 void MainGame::processInput() {
@@ -133,9 +152,10 @@ void MainGame::processInput() {
 		glm::vec2 direction = mouseCoords - player->getPosition();
 		direction = glm::normalize(direction);
 		float speed = 25;
-		glm::vec2 vec = direction * speed;
-		vec = vec + (player->getDirection() * player->getSpeed());
-		_bullets.emplace_back(new Bullet(player->getPosition(), vec, 1));
+		//glm::vec2 vec = direction * speed;
+		//vec = vec + (player->getDirection() * player->getSpeed());
+		//_bullets.emplace_back(new Bullet(player->getPosition(), vec, 1));
+		_bullets.emplace_back(new Bullet(player->getPosition(), direction, speed));
 	}
 	counter++;
 }
@@ -153,6 +173,13 @@ void MainGame::drawGame() {
 	glUniform1i(textureLocation, 0);
 	glUniform1f(_colorProgram.getUniformLocation("offsetX"), 0);	//xOffset
 	glUniform1f(_colorProgram.getUniformLocation("offsetY"), 0);	//yOffset
+	//_spriteBatch.begin();
+	//for (int i = 0; i < _humans.size(); i++) {
+	//	glm::vec4 dest(_humans[i]->getPosition() - glm::vec2(25, 25), 50, 50);
+	//	glm::vec4 uv(0, 0, 1, 1);
+	//	_spriteBatch.draw(dest, uv, Bengine::ResourceManager::getTexture("images/human.png").id, 0.0f, Bengine::Color(255, 255, 255));
+	//}
+	//_spriteBatch.end();
 	//_spriteBatch.renderBatch();
 	_levels[0]->draw();
 	for (int i = 0; i < _sprites.size(); i++) {

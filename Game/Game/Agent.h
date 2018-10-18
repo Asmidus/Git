@@ -23,7 +23,8 @@ public:
 	void init();
 	virtual void destroy();
 	virtual void update(const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombies);
-	void collideWithLevel(const std::vector<std::string>& levelData);
+	bool collideWithLevel(const std::vector<std::string>& levelData);
+	bool collideWithAgent(Agent* agent);
 	void draw();
 
 	glm::vec2 getPosition() { return _position; }
@@ -38,7 +39,7 @@ public:
 protected:
 	void checkTilePosition(const std::vector<std::string>& levelData, std::vector<glm::vec2>& collideTilePositions, float x, float y);
 	void collideWithTile(glm::vec2 tilePos);
-	int _width, _height;
+	int _size;
 	glm::vec2 _position;
 	glm::vec2 _direction;
 	float _speed;

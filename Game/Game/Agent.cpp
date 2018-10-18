@@ -13,11 +13,11 @@ Agent::Agent() {
 Agent::~Agent() {}
 
 void Agent::init() {
-	_width = _height = 50;
+	_size = 50;
 	_position = glm::vec2(0, 0);
 	_direction = glm::vec2(0, 0);
 	_speed = 5;
-	_sprite.init(0, 0, _width, _height, "images/Circle.png", Bengine::Color(255, 255, 0, 255));
+	_sprite.init(0, 0, _size, _size, "images/Circle.png", Bengine::Color(255, 255, 0, 255));
 }
 
 void Agent::destroy() {
@@ -30,12 +30,12 @@ void Agent::update(const std::vector<std::string>& levelData, std::vector<Human*
 	collideWithLevel(levelData);
 }
 
-void Agent::collideWithLevel(const std::vector<std::string>& levelData) {
+bool Agent::collideWithLevel(const std::vector<std::string>& levelData) {
 	std::vector<glm::vec2> collideTilePositions;
-	checkTilePosition(levelData, collideTilePositions, _position.x - _width/2, _position.y - _height/2);
-	checkTilePosition(levelData, collideTilePositions, _position.x + _width/2, _position.y - _height/2);
-	checkTilePosition(levelData, collideTilePositions, _position.x - _width/2, _position.y + _height/2);
-	checkTilePosition(levelData, collideTilePositions, _position.x + _width/2, _position.y + _height/2);
+	checkTilePosition(levelData, collideTilePositions, _position.x - _size/2, _position.y - _size/2);
+	checkTilePosition(levelData, collideTilePositions, _position.x + _size/2, _position.y - _size/2);
+	checkTilePosition(levelData, collideTilePositions, _position.x - _size/2, _position.y + _size/2);
+	checkTilePosition(levelData, collideTilePositions, _position.x + _size/2, _position.y + _size/2);
 	//if (collideTilePositions.size() == 0) {
 	//	return;
 	//}
@@ -46,10 +46,26 @@ void Agent::collideWithLevel(const std::vector<std::string>& levelData) {
 	//		collideTilePositions[i + 1] = temp;
 	//	}
 	//}
+	if (collideTilePositions.size() == 0) {
+		return false;
+	}
 	std::sort(collideTilePositions.begin(), collideTilePositions.end(), compareTile(*this));
 	for (int i = 0; i < collideTilePositions.size(); i++) {
 		collideWithTile(collideTilePositions[i]);
 	}
+	return true;
+}
+
+bool Agent::collideWithAgent(Agent* agent) {
+	glm::vec2 distance = _position - agent->_position;
+	if (glm::length(distance) <= _size/2 + agent->_size/2) {
+		float depth = _size - glm::length(distance);
+		glm::vec2 collisionDepthVec = glm::normalize(distance) * depth;
+		_position += collisionDepthVec/2.0f;
+		agent->_position -= collisionDepthVec/2.0f;
+		return true;
+	}
+	return false;
 }
 
 void Agent::draw() {
@@ -68,7 +84,7 @@ void Agent::checkTilePosition(const std::vector<std::string>& levelData, std::ve
 }
 
 void Agent::collideWithTile(glm::vec2 tilePos) {
-	const float AGENT_RADIUS = (float)_width/2;
+	const float AGENT_RADIUS = (float)_size/2;
 	const float TILE_RADIUS = (float)TILE_SIZE/2;
 	const float MIN_DISTANCE = AGENT_RADIUS + TILE_RADIUS;
 	//glm::vec2 position(_position.x - _width/2, _position.y - _height/2);

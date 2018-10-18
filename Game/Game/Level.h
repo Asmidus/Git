@@ -14,6 +14,9 @@ public:
 	void draw();
 	glm::vec2 getPlayerStartPos() { return _playerStartPos; }
 	std::vector<std::string> getLevelData() { return _levelData; }
+	int getNumHumans() { return _numHumans; }
+	int getWidth() { return _levelData[0].size(); }
+	int getHeight() { return _levelData.size(); }
 private:
 	std::vector<std::string> _levelData;
 	int _numHumans;
