@@ -46,7 +46,7 @@ void MainGame::initSystems() {
 	Bengine::init();
 	_window.create("Test Engine", _screenWidth, _screenHeight, 0);
 	initShaders();
-	_spriteBatch.init();
+	//_spriteBatch.init();
 	_fpsLimiter.init(_maxFPS);
 	srand(time(0));
 
@@ -55,16 +55,25 @@ void MainGame::initSystems() {
 void MainGame::initLevel() {
 	_levels.push_back(new Level("Levels/level1.txt"));
 	player = new Player();
-	player->init(10.0f, _levels[0]->getPlayerStartPos(), &_inputManager);
+	player->init(&_inputManager, &_camera, 10.0f, _levels[0]->getPlayerStartPos());
+	player->addGun(new Gun("Blaster", 3, 1, 0.15, 10, 25, 2));
+	player->addGun(new Gun("Sniper", 10, 1, 0, 25, 50, 5));
+	player->addGun(new Gun("Shotgun", 20, 5, 0.05, 10, 25, 2));
 	_humans.push_back(player);
 
 	static std::mt19937 randomEngine(time(nullptr));
 	static std::uniform_int_distribution<int> randX(1*TILE_SIZE + TILE_SIZE/2, (_levels[0]->getWidth() - 2)*TILE_SIZE + TILE_SIZE/2);
 	static std::uniform_int_distribution<int> randY(1*TILE_SIZE + TILE_SIZE/2, (_levels[0]->getHeight() - 2)*TILE_SIZE + TILE_SIZE/2);
 
-	for (int i = 0; i < _levels[0]->getNumHumans(); i++) {
+	for (int i = 0; i < 1000; i++) {
 		_humans.push_back(new Human());
-		_humans.back()->init(5.0f, glm::vec2(randX(randomEngine), randY(randomEngine)));
+		_humans.back()->init(1.0f, glm::vec2(randX(randomEngine), randY(randomEngine)));
+	}
+
+	const std::vector<glm::vec2>& zombiePositions = _levels[0]->getZombieStartPos();
+	for (int i = 0; i < zombiePositions.size(); i++) {
+		_zombies.push_back(new Zombie());
+		_zombies.back()->init(5.0f, zombiePositions[i]);
 	}
 }
 
@@ -82,15 +91,7 @@ void MainGame::gameLoop() {
 		updateAgents();
 		_camera.setPosition(player->getPosition());
 		_camera.update();
-		for (int i = 0; i < _bullets.size();i++) {
-			if (_bullets[i]->update()) {
-				Bullet* temp = _bullets[i];
-				_bullets[i] = _bullets.back();
-				_bullets.back() = temp;
-				delete _bullets.back();
-				_bullets.pop_back();
-			}
-		}
+		updateBullets();
 		_fps = _fpsLimiter.end();
 		static int frameCounter = 0;
 		if (frameCounter == 10) {
@@ -104,13 +105,65 @@ void MainGame::gameLoop() {
 	}
 }
 
+void MainGame::removeBullet(int index) {
+	Bullet* temp = _bullets[index];
+	_bullets[index] = _bullets.back();
+	_bullets.back() = temp;
+	delete _bullets.back();
+	_bullets.pop_back();
+}
+
+void MainGame::updateBullets() {
+	for (int i = 0; i < _bullets.size(); i++) {
+		if (_bullets[i]->update(_levels[0]->getLevelData())) {
+			removeBullet(i);
+		}
+	}
+	for (int i = 0; i < _bullets.size(); i++) {
+		for (int j = 0; j < _zombies.size(); j++) {
+			if (_bullets[i]->collideWithAgent(_zombies[j])) {
+				_zombies[j]->damage(_bullets[i]->getDamage());
+				removeBullet(i);
+				break;
+			}
+		}
+	}
+}
+
 void MainGame::updateAgents() {
-	for (int i = 0; i < _humans.size(); i++) {
+	player->update(_levels[0]->getLevelData(), _humans, _zombies, _bullets);
+	for (int i = 1; i < _humans.size(); i++) {
 		_humans[i]->update(_levels[0]->getLevelData(), _humans, _zombies);
+	}
+	for (int i = 0; i < _zombies.size(); i++) {
+		if (_zombies[i]->update(_levels[0]->getLevelData(), _humans, _zombies)) {
+			auto temp = _zombies[i];
+			_zombies[i] = _zombies.back();
+			_zombies.back() = temp;
+			delete _zombies.back();
+			_zombies.pop_back();
+		}
 	}
 	for (int i = 0; i < _humans.size(); i++) {
 		for (int j = i + 1; j < _humans.size(); j++) {
 			_humans[i]->collideWithAgent(_humans[j]);
+		}
+	}
+	for (int i = 0; i < _zombies.size(); i++) {
+		for (int j = i + 1; j < _zombies.size(); j++) {
+			_zombies[i]->collideWithAgent(_zombies[j]);
+		}
+		for (int j = 1; j < _humans.size(); j++) {
+			if (_zombies[i]->collideWithAgent(_humans[j])) {
+				_zombies.push_back(new Zombie());
+				_zombies.back()->init(5.0f, _humans[j]->getPosition());
+				auto temp = _humans[j];
+				_humans[j] = _humans.back();
+				_humans.back() = temp;
+				_humans.back()->destroy();
+				delete _humans.back();
+				_humans.pop_back();
+			}
 		}
 	}
 }
@@ -145,19 +198,19 @@ void MainGame::processInput() {
 	if (_inputManager.isKeyPressed(SDLK_e)) {
 		_camera.setScale(_camera.getScale()/1.03);
 	}
-	static int counter = 0;
-	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT) && counter%10 == 0) {
-		glm::vec2 mouseCoords = _inputManager.getMouseCoords();
-		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
-		glm::vec2 direction = mouseCoords - player->getPosition();
-		direction = glm::normalize(direction);
-		float speed = 25;
-		//glm::vec2 vec = direction * speed;
-		//vec = vec + (player->getDirection() * player->getSpeed());
-		//_bullets.emplace_back(new Bullet(player->getPosition(), vec, 1));
-		_bullets.emplace_back(new Bullet(player->getPosition(), direction, speed));
-	}
-	counter++;
+	//static int counter = 0;
+	//if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT) && counter%10 == 0) {
+	//	glm::vec2 mouseCoords = _inputManager.getMouseCoords();
+	//	mouseCoords = _camera.convertScreenToWorld(mouseCoords);
+	//	glm::vec2 direction = mouseCoords - player->getPosition();
+	//	direction = glm::normalize(direction);
+	//	float speed = 25;
+	//	//glm::vec2 vec = direction * speed;
+	//	//vec = vec + (player->getDirection() * player->getSpeed());
+	//	//_bullets.emplace_back(new Bullet(player->getPosition(), vec, 1));
+	//	_bullets.emplace_back(new Bullet(player->getPosition(), direction, speed));
+	//}
+	//counter++;
 }
 
 void MainGame::drawGame() {
@@ -190,6 +243,9 @@ void MainGame::drawGame() {
 	}
 	for (int i = 0; i < _humans.size(); i++) {
 		_humans[i]->draw();
+	}
+	for (int i = 0; i < _zombies.size(); i++) {
+		_zombies[i]->draw();
 	}
 	_window.swapBuffer();
 }

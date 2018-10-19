@@ -1,11 +1,13 @@
 #include "Human.h"
 #include <random>
 #include <ctime>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/rotate_vector.hpp>
 
 
-Human::Human() {}
+Human::Human() : _frames(0) {}
 
-Human::Human(float speed, glm::vec2 position) {
+Human::Human(float speed, glm::vec2 position) : _frames(0) {
 	init(speed, position);
 }
 
@@ -22,9 +24,22 @@ void Human::init(float speed, glm::vec2 position) {
 	_direction = glm::normalize(_direction);
 }
 
-void Human::update(const std::vector<std::string>& levelData,
+bool Human::update(const std::vector<std::string>& levelData,
 				   std::vector<Human*>& humans,
 				   std::vector<Zombie*>& zombies) {
-	_position += _direction * _speed;
-	collideWithLevel(levelData);
+	static std::mt19937 randomEngine(time(nullptr));
+	static std::uniform_real_distribution<float> randRotate(-1.0f, 1.0f);
+	_position += _direction * _speed; 
+	_frames++;
+	if (_frames%20 == 0) {
+		_direction = glm::rotate(_direction, randRotate(randomEngine));
+	}
+	if (collideWithLevel(levelData)) {
+		_direction = glm::rotate(_direction, randRotate(randomEngine));
+	}
+	if (_health <= 0) {
+		_sprite.destroy();
+		return true;
+	}
+	return false;
 }

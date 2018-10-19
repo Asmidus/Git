@@ -22,7 +22,7 @@ public:
 
 	void init();
 	virtual void destroy();
-	virtual void update(const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombies);
+	virtual bool update(const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombies);
 	bool collideWithLevel(const std::vector<std::string>& levelData);
 	bool collideWithAgent(Agent* agent);
 	void draw();
@@ -32,10 +32,12 @@ public:
 	glm::vec2 getDirection() { return _direction; }
 	void setDirection(glm::vec2 direction) { _direction = glm::normalize(direction); }
 	glm::vec2 getDimensions() { return _sprite.getDimensions(); }
+	int getSize() { return _size; }
 	void setSprite(Bengine::Sprite sprite) { _sprite = sprite; }
 	Bengine::Sprite getSprite() { return _sprite; }
 	void setSpeed(float speed) { _speed = speed; }
 	float getSpeed() { return _speed; }
+	void damage(int damageDealt) { _health -= damageDealt; }
 protected:
 	void checkTilePosition(const std::vector<std::string>& levelData, std::vector<glm::vec2>& collideTilePositions, float x, float y);
 	void collideWithTile(glm::vec2 tilePos);
@@ -43,6 +45,7 @@ protected:
 	glm::vec2 _position;
 	glm::vec2 _direction;
 	float _speed;
+	int _health;
 	Bengine::Sprite _sprite;
 };
 

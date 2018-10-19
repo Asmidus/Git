@@ -17,6 +17,7 @@ public:
 	int getNumHumans() { return _numHumans; }
 	int getWidth() { return _levelData[0].size(); }
 	int getHeight() { return _levelData.size(); }
+	std::vector<glm::vec2> getZombieStartPos() { return _zombieStartPos; }
 private:
 	std::vector<std::string> _levelData;
 	int _numHumans;
@@ -24,6 +25,6 @@ private:
 	Bengine::ResourceManager* _resourceManager;		//this is the pointer to the manager in MainGame
 
 	glm::vec2 _playerStartPos;
-	std::vector<glm::ivec2> _zombieStartPos;
+	std::vector<glm::vec2> _zombieStartPos;
 };
 

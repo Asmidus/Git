@@ -3,12 +3,11 @@
 #include <iostream>
 
 
-Agent::Agent() {
+Agent::Agent() : _health(10) {
 	if (Bengine::Sprite::isInitialized()) {
 		init();
 	}
 }
-
 
 Agent::~Agent() {}
 
@@ -24,10 +23,11 @@ void Agent::destroy() {
 	_sprite.destroy();
 }
 
-void Agent::update(const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombies) {
+bool Agent::update(const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombies) {
 	//_direction = glm::normalize(glm::vec2(rand()%2, rand()%2));
 	_position += _direction * _speed;
 	collideWithLevel(levelData);
+	return true;
 }
 
 bool Agent::collideWithLevel(const std::vector<std::string>& levelData) {

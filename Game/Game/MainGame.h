@@ -32,6 +32,9 @@ private:
 	void initLevel();
 	void initShaders();
 	void gameLoop();
+	void updatebullets();
+	void removeBullet(int index);
+	void updateBullets();
 	void updateAgents();
 	void processInput();
 	void drawGame();
