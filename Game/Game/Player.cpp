@@ -12,7 +12,7 @@ Player::~Player() {
 	}
 }
 
-void Player::init(Bengine::InputManager* inputManager, Bengine::Camera2D* camera, float speed, glm::vec2 position) {
+void Player::init(float speed, glm::vec2 position, Bengine::InputManager* inputManager, Bengine::Camera2D* camera) {
 	_inputManager = inputManager;
 	_camera = camera;
 	_sprite.destroy();

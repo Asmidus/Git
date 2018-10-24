@@ -4,7 +4,7 @@
 
 namespace Bengine {
 
-	Glyph::Glyph(const glm::vec4 & destRect, const glm::vec4 & uvRect, GLuint Texture, float Depth, const Color & color) : texture(Texture), depth(Depth) {
+	Glyph::Glyph(const glm::vec4 & destRect, const glm::vec4 & uvRect, GLuint Texture, float Depth, const ColorRGBA8& color) : texture(Texture), depth(Depth) {
 		topLeft.color = color;
 		topLeft.setPosition(destRect.x, destRect.y + destRect.w);
 		topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
@@ -47,7 +47,7 @@ namespace Bengine {
 		createRenderBatches();
 	}
 
-	void SpriteBatch::draw(const glm::vec4 & destRect, const glm::vec4 & uvRect, GLuint texture, float depth, const Color & color) {
+	void SpriteBatch::draw(const glm::vec4 & destRect, const glm::vec4 & uvRect, GLuint texture, float depth, const ColorRGBA8& color) {
 		_glyphs.emplace_back(destRect, uvRect, texture, depth, color);
 	}
 

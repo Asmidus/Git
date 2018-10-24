@@ -32,13 +32,13 @@ Level::Level(const std::string& fileName) {
 			switch (tile) {
 			case 'B':
 			case 'R':
-				_spriteBatch.draw(destRect, uvRect, Bengine::ResourceManager::getTexture("images/red_bricks.png").id, 0.0f, Bengine::Color(255, 255, 255));
+				_spriteBatch.draw(destRect, uvRect, Bengine::ResourceManager::getTexture("images/red_bricks.png").id, 0.0f, Bengine::ColorRGBA8(255, 255, 255));
 				break;
 			case 'G':
-				_spriteBatch.draw(destRect, uvRect, Bengine::ResourceManager::getTexture("images/glass.png").id, 0.0f, Bengine::Color(255, 255, 255));
+				_spriteBatch.draw(destRect, uvRect, Bengine::ResourceManager::getTexture("images/glass.png").id, 0.0f, Bengine::ColorRGBA8(255, 255, 255));
 				break;
 			case 'L':
-				_spriteBatch.draw(destRect, uvRect, Bengine::ResourceManager::getTexture("images/light_bricks.png").id, 0.0f, Bengine::Color(255, 255, 255));
+				_spriteBatch.draw(destRect, uvRect, Bengine::ResourceManager::getTexture("images/light_bricks.png").id, 0.0f, Bengine::ColorRGBA8(255, 255, 255));
 				break;
 			case '@':
 				_playerStartPos.x = x * TILE_SIZE + TILE_SIZE/2;

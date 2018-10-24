@@ -10,6 +10,11 @@
 #include <time.h>
 #include <string>
 
+
+const float HUMAN_SPEED = 1.0f;
+const float ZOMBIE_SPEED = 2.5f;
+const float PLAYER_SPEED = 10.0f;
+
 MainGame::MainGame() : _screenWidth(800), _screenHeight(600), _gameState(GameState::PLAY), _maxFPS(60.0f) , player(nullptr) {
 	_camera.init(_screenWidth, _screenHeight);
 }
@@ -55,8 +60,8 @@ void MainGame::initSystems() {
 void MainGame::initLevel() {
 	_levels.push_back(new Level("Levels/level1.txt"));
 	player = new Player();
-	player->init(&_inputManager, &_camera, 10.0f, _levels[0]->getPlayerStartPos());
-	player->addGun(new Gun("Blaster", 3, 1, 0.15, 10, 25, 2));
+	player->init(PLAYER_SPEED, _levels[0]->getPlayerStartPos(), &_inputManager, &_camera);
+	player->addGun(new Gun("Blaster", 1, 5, 0.15, 50, 25, 5));
 	player->addGun(new Gun("Sniper", 10, 1, 0, 25, 50, 5));
 	player->addGun(new Gun("Shotgun", 20, 5, 0.05, 10, 25, 2));
 	_humans.push_back(player);
@@ -67,13 +72,13 @@ void MainGame::initLevel() {
 
 	for (int i = 0; i < 1000; i++) {
 		_humans.push_back(new Human());
-		_humans.back()->init(1.0f, glm::vec2(randX(randomEngine), randY(randomEngine)));
+		_humans.back()->init(HUMAN_SPEED, glm::vec2(randX(randomEngine), randY(randomEngine)));
 	}
 
 	const std::vector<glm::vec2>& zombiePositions = _levels[0]->getZombieStartPos();
 	for (int i = 0; i < zombiePositions.size(); i++) {
 		_zombies.push_back(new Zombie());
-		_zombies.back()->init(5.0f, zombiePositions[i]);
+		_zombies.back()->init(ZOMBIE_SPEED, zombiePositions[i]);
 	}
 }
 
@@ -156,7 +161,7 @@ void MainGame::updateAgents() {
 		for (int j = 1; j < _humans.size(); j++) {
 			if (_zombies[i]->collideWithAgent(_humans[j])) {
 				_zombies.push_back(new Zombie());
-				_zombies.back()->init(5.0f, _humans[j]->getPosition());
+				_zombies.back()->init(ZOMBIE_SPEED, _humans[j]->getPosition());
 				auto temp = _humans[j];
 				_humans[j] = _humans.back();
 				_humans.back() = temp;
@@ -193,24 +198,11 @@ void MainGame::processInput() {
 		}
 	}
 	if (_inputManager.isKeyPressed(SDLK_q)) {
-		_camera.setScale(_camera.getScale()*1.03);
+		_camera.setScale(_camera.getScale()*1.02);
 	}
 	if (_inputManager.isKeyPressed(SDLK_e)) {
-		_camera.setScale(_camera.getScale()/1.03);
+		_camera.setScale(_camera.getScale()/1.02);
 	}
-	//static int counter = 0;
-	//if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT) && counter%10 == 0) {
-	//	glm::vec2 mouseCoords = _inputManager.getMouseCoords();
-	//	mouseCoords = _camera.convertScreenToWorld(mouseCoords);
-	//	glm::vec2 direction = mouseCoords - player->getPosition();
-	//	direction = glm::normalize(direction);
-	//	float speed = 25;
-	//	//glm::vec2 vec = direction * speed;
-	//	//vec = vec + (player->getDirection() * player->getSpeed());
-	//	//_bullets.emplace_back(new Bullet(player->getPosition(), vec, 1));
-	//	_bullets.emplace_back(new Bullet(player->getPosition(), direction, speed));
-	//}
-	//counter++;
 }
 
 void MainGame::drawGame() {
@@ -226,18 +218,7 @@ void MainGame::drawGame() {
 	glUniform1i(textureLocation, 0);
 	glUniform1f(_colorProgram.getUniformLocation("offsetX"), 0);	//xOffset
 	glUniform1f(_colorProgram.getUniformLocation("offsetY"), 0);	//yOffset
-	//_spriteBatch.begin();
-	//for (int i = 0; i < _humans.size(); i++) {
-	//	glm::vec4 dest(_humans[i]->getPosition() - glm::vec2(25, 25), 50, 50);
-	//	glm::vec4 uv(0, 0, 1, 1);
-	//	_spriteBatch.draw(dest, uv, Bengine::ResourceManager::getTexture("images/human.png").id, 0.0f, Bengine::Color(255, 255, 255));
-	//}
-	//_spriteBatch.end();
-	//_spriteBatch.renderBatch();
 	_levels[0]->draw();
-	for (int i = 0; i < _sprites.size(); i++) {
-       		_sprites[i]->drawOffset(i*5, i*5);
-	}
 	for (int i = 0; i < _bullets.size();i++) {
 		_bullets[i]->draw();
 	}

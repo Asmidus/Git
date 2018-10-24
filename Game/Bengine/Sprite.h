@@ -13,7 +13,7 @@ namespace Bengine {
 
 		void destroy();
 
-		void init(float x, float y, float width, float height, std::string texturePath, Color color);
+		void init(float x, float y, float width, float height, std::string texturePath, ColorRGBA8 color);
 
 		void init(float x, float y, float width, float height, std::string texturePath);
 		void draw();
