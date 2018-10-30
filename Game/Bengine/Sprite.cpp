@@ -17,7 +17,7 @@ namespace Bengine {
 		}
 	}
 
-	void Sprite::init(float x, float y, float width, float height, std::string texturePath, Color color) {
+	void Sprite::init(float x, float y, float width, float height, std::string texturePath, ColorRGBA8 color) {
 		_x = x;
 		_y = y;
 		_size = width;
@@ -55,7 +55,7 @@ namespace Bengine {
 	}
 
 	void Sprite::init(float x, float y, float width, float height, std::string texturePath) {
-		init(x, y, width, height, texturePath, Color(255, 255, 255, 255));
+		init(x, y, width, height, texturePath, ColorRGBA8(255, 255, 255, 255));
 	}
 
 	void Sprite::draw() {

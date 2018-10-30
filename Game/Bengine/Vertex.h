@@ -14,12 +14,23 @@ namespace Bengine {
 		GLubyte b;
 		GLubyte a;
 	};
+	struct ColorRGBA8 {
+		ColorRGBA8() : r(0), g(0), b(0), a(0) {}
+		ColorRGBA8(GLubyte R, GLubyte G, GLubyte B, GLubyte A) :
+			r(R), g(G), b(B), a(A) {}
+		ColorRGBA8(GLubyte R, GLubyte G, GLubyte B) :
+			r(R), g(G), b(B), a(255) {}
+		GLubyte r;
+		GLubyte g;
+		GLubyte b;
+		GLubyte a;
+	};
 	struct Vertex {
 		struct Position {
 			float x;
 			float y;
 		} position;
-		Color color;
+		ColorRGBA8 color;
 		struct UV {
 			float u;
 			float v;
@@ -37,7 +48,7 @@ namespace Bengine {
 			color.a = a;
 		}
 
-		void setColor(Color col) {
+		void setColor(ColorRGBA8 col) {
 			color = col;
 		}
 

@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-Agent::Agent() : _health(10) {
+Agent::Agent() : _health(5) {
 	if (Bengine::Sprite::isInitialized()) {
 		init();
 	}
@@ -16,7 +16,7 @@ void Agent::init() {
 	_position = glm::vec2(0, 0);
 	_direction = glm::vec2(0, 0);
 	_speed = 5;
-	_sprite.init(0, 0, _size, _size, "images/Circle.png", Bengine::Color(255, 255, 0, 255));
+	_sprite.init(0, 0, _size, _size, "images/Circle.png", Bengine::ColorRGBA8(255, 255, 0, 255));
 }
 
 void Agent::destroy() {
