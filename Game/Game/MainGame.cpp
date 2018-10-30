@@ -150,25 +150,36 @@ void MainGame::updateAgents() {
 		}
 	}
 	for (int i = 0; i < _humans.size(); i++) {
-		for (int j = i + 1; j < _humans.size(); j++) {
-			_humans[i]->collideWithAgent(_humans[j]);
-		}
+		//for (int j = i + 1; j < _humans.size(); j++) {
+		//	_humans[i]->collideWithAgent(_humans[j]);
+		//}
 	}
 	for (int i = 0; i < _zombies.size(); i++) {
-		for (int j = i + 1; j < _zombies.size(); j++) {
-			_zombies[i]->collideWithAgent(_zombies[j]);
-		}
-		for (int j = 1; j < _humans.size(); j++) {
-			if (_zombies[i]->collideWithAgent(_humans[j])) {
-				_zombies.push_back(new Zombie());
-				_zombies.back()->init(ZOMBIE_SPEED, _humans[j]->getPosition());
-				auto temp = _humans[j];
-				_humans[j] = _humans.back();
-				_humans.back() = temp;
-				_humans.back()->destroy();
-				delete _humans.back();
-				_humans.pop_back();
-			}
+		//for (int j = i + 1; j < _zombies.size(); j++) {
+		//	_zombies[i]->collideWithAgent(_zombies[j]);
+		//}
+		//for (int j = 1; j < _humans.size(); j++) {
+		//	if (_zombies[i]->collideWithAgent(_humans[j])) {
+		//		_zombies.push_back(new Zombie());
+		//		_zombies.back()->init(ZOMBIE_SPEED, _humans[j]->getPosition());
+		//		auto temp = _humans[j];
+		//		_humans[j] = _humans.back();
+		//		_humans.back() = temp;
+		//		_humans.back()->destroy();
+		//		delete _humans.back();
+		//		_humans.pop_back();
+		//	}
+		//}
+		int j = _zombies[i]->getClosestHumanIndex();
+		if (_zombies[i]->collideWithAgent(_humans[j])) {
+			_zombies.push_back(new Zombie());
+			_zombies.back()->init(ZOMBIE_SPEED, _humans[j]->getPosition());
+			auto temp = _humans[j];
+			_humans[j] = _humans.back();
+			_humans.back() = temp;
+			_humans.back()->destroy();
+			delete _humans.back();
+			_humans.pop_back();
 		}
 	}
 }

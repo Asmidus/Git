@@ -13,6 +13,7 @@ void Zombie::init(float speed, glm::vec2 position) {
 	_position = position;
 	_direction = glm::vec2(-1, 0);
 	_direction = glm::normalize(_direction);
+	_closestHumanIndex = 0;
 }
 
 bool Zombie::update(const std::vector<std::string>& levelData,
@@ -40,6 +41,7 @@ Human* Zombie::getNearestHuman(std::vector<Human*>& humans) {
 		if (distance < smallestDistance) {
 			smallestDistance = distance;
 			closestHuman = humans[i];
+			_closestHumanIndex = i;
 		}
 	}
 	return closestHuman;
