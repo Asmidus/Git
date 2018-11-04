@@ -127,6 +127,7 @@
     <ClInclude Include="LoadObject.h" />
     <ClInclude Include="LoadShaders.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="Shape.h" />
     <ClInclude Include="viewcontroller.h" />
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +140,7 @@
     <ClCompile Include="LoadShaders.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="Shape.cpp" />
     <ClCompile Include="viewcontroller.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

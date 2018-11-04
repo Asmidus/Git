@@ -5,6 +5,7 @@
 
 #include "viewcontroller.h"
 #include <stdlib.h>
+#define _CRT_SECURE_NO_WARNINGS
 
 int main(int argc, char *argv[])  //main() must take these parameters when using SDL
 {

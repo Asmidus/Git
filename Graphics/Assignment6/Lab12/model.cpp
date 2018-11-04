@@ -67,15 +67,15 @@ bool Model::init()
 	c.init();
 
 	//Now, set up the lights for the scene
-	totalLights = 3;
+	totalLights = 1;
 	lights[0].color = vec4(1.0, 1.0, 1.0, 1.0);
 	lights[0].position = vec4(0.0, 0.0, 4.0, 1.0); //positional light since w = 1
-	lights[0].spotLightValues = vec4(1.0, 0.99, 4.0, 0.0);
+	//lights[0].spotLightValues = vec4(1.0, 0.99, 4.0, 0.0);
 	//If the first parameter to spotLightValues is > 0, then this is a spotlight
 	//The second parameter to spotLightValues is the Spot Cosine Cutoff
 	//The third parameter to spotLightValues is the Spotlight Exponent
 	//The fourth parameter to spotLightValues is unused 
-	lights[0].spotConeDirection = vec4(0.0, 0.0, -1.0, 0.0);
+	//lights[0].spotConeDirection = vec4(0.0, 0.0, -1.0, 0.0);
 	lights[0].constantAttenuation = 1.0;
 	lights[0].linearAttenuation = 0.0;
 	lights[0].quadraticAttenuation = 0.0;

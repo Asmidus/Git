@@ -12,6 +12,7 @@
 #include <glm.hpp>
 #include "LightProperties.h"
 #include "cube.h"
+#include "Shape.h"
 using namespace glm;
 
 class Model
@@ -30,7 +31,7 @@ class Model
 		GLint globalAmbientLightLoc;
 		GLuint lightsLoc;
 
-		Cube c;
+		Shape c;
 		float yAngle;
 		float xAngle;
 

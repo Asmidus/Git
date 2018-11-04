@@ -1,16 +1,20 @@
 #pragma once
+#include <iostream>
+#include <string>
 #include <vector>
-#include <glm.hpp>
+#include <fstream>
+#include <map>
+
+using namespace std;
 
 class LoadObject {
 public:
-	LoadObject();
-	~LoadObject();
-	bool loadOBJ(
-		const char * path,
-		std::vector < glm::vec3 > & out_vertices,
-		std::vector < glm::vec2 > & out_uvs,
-		std::vector < glm::vec3 > & out_normals
-	)
+	static void loadOBJ(const string aInFilename,
+		vector<float>& finalVerts,
+		vector<float>& finalNorms,
+		vector<float>& finalTextures,
+		vector<int>& finalFaces,
+		bool aVerbose = false);
+	static vector<string> explode(string aStr, char aDelim);
 };
 
