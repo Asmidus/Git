@@ -6,7 +6,7 @@
 Shape::Shape() {}
 
 bool Shape::init() {
-	LoadObject::loadOBJ("weird.obj", vertices, normals, uvs, faces);
+	LoadObject::loadOBJ("cylinder.obj", vertices, normals, textures, faces, true);
 	glGenBuffers(3, &Buffer[0]); //Create a buffer objects for vertex positions
 	glBindBuffer(GL_ARRAY_BUFFER, Buffer[0]);  //Buffers[0] will be the position for each vertex
 	glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(float), vertices.data(), GL_STATIC_DRAW);
@@ -21,11 +21,11 @@ bool Shape::init() {
 }
 
 void Shape::draw() {
-	glBindVertexArray(VAO);
+	//glBindVertexArray(VAO);
 	glVertexAttrib1f(3, 25.0);	//All sides will have the same "shininess". This might seem
 								//counterintuitive, but the smaller this number the more
 								//noticable the specular highlights will be.
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());
+	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 }
 
 

@@ -128,45 +128,71 @@ void LoadObject::loadOBJ(const string aInFilename,
 
 				if (aVerbose)
 					cout << "Face: (" << g1 << ") (" << g2 << ") (" << g3 << ")" << endl;
+				string str1 = g1.substr(0, g1.find_first_of('/'));
+				int vert1 = (int)atof(str1.c_str());
+				string str2 = g2.substr(0, g2.find_first_of('/'));
+				int vert2 = (int)atof(str2.c_str());
+				string str3 = g3.substr(0, g3.find_first_of('/'));
+				int vert3 = (int)atof(str3.c_str());
+				string str4 = g1.substr(g1.find_last_of('/') + 1, g1.length());
+				int norm = (int)atof(str4.c_str());
+				finalVerts.push_back(verts[(vert1 - 1)*3]);
+				finalVerts.push_back(verts[(vert1 - 1)*3+1]);
+				finalVerts.push_back(verts[(vert1 - 1)*3+2]);
+				finalVerts.push_back(verts[(vert2 - 1)*3]);
+				finalVerts.push_back(verts[(vert2 - 1)*3+1]);
+				finalVerts.push_back(verts[(vert2 - 1)*3+2]);
+				finalVerts.push_back(verts[(vert3 - 1)*3]);
+				finalVerts.push_back(verts[(vert3 - 1)*3+1]);
+				finalVerts.push_back(verts[(vert3 - 1)*3+2]);
+				finalNorms.push_back(norms[(norm - 1)*3]);
+				finalNorms.push_back(norms[(norm - 1)*3+1]);
+				finalNorms.push_back(norms[(norm - 1)*3+2]);
+				finalNorms.push_back(norms[(norm - 1)*3]);
+				finalNorms.push_back(norms[(norm - 1)*3+1]);
+				finalNorms.push_back(norms[(norm - 1)*3+2]);
+				finalNorms.push_back(norms[(norm - 1)*3]);
+				finalNorms.push_back(norms[(norm - 1)*3+1]);
+				finalNorms.push_back(norms[(norm - 1)*3+2]);
 
-				// Just stick all the unique values in this hash and give each key a 
-				// unique, increasing value
-				map<string, int>::iterator itr;
+			//	// Just stick all the unique values in this hash and give each key a 
+			//	// unique, increasing value
+			//	map<string, int>::iterator itr;
 
-				//
-				// Add key's position to the faces list
-				//
+			//	//
+			//	// Add key's position to the faces list
+			//	//
 
-				itr = faceHash.find(g1);
-				// If key not in map
-				if (itr == faceHash.end()) {
-					faceHash[g1] = hashIndex++;
-				}
-				itr = faceHash.find(g1);
-				faces.push_back(itr->second);
+			//	itr = faceHash.find(g1);
+			//	// If key not in map
+			//	if (itr == faceHash.end()) {
+			//		faceHash[g1] = hashIndex++;
+			//	}
+			//	itr = faceHash.find(g1);
+			//	faces.push_back(itr->second);
 
-				itr = faceHash.find(g2);
-				// If key not in map
-				if (itr == faceHash.end()) {
-					faceHash[g2] = hashIndex++;
-				}
-				itr = faceHash.find(g2);
-				faces.push_back(itr->second);
+			//	itr = faceHash.find(g2);
+			//	// If key not in map
+			//	if (itr == faceHash.end()) {
+			//		faceHash[g2] = hashIndex++;
+			//	}
+			//	itr = faceHash.find(g2);
+			//	faces.push_back(itr->second);
 
-				itr = faceHash.find(g3);
-				// If key not in map
-				if (itr == faceHash.end()) {
-					faceHash[g3] = hashIndex++;
-				}
-				itr = faceHash.find(g3);
-				faces.push_back(itr->second);
+			//	itr = faceHash.find(g3);
+			//	// If key not in map
+			//	if (itr == faceHash.end()) {
+			//		faceHash[g3] = hashIndex++;
+			//	}
+			//	itr = faceHash.find(g3);
+			//	faces.push_back(itr->second);
 			}
 
-			// Only verts in file
-			else {
-				// Push faces straight up -- converting to 
-				// base zero in the process
-			}
+			//// Only verts in file
+			//else {
+			//	// Push faces straight up -- converting to 
+			//	// base zero in the process
+			//}
 		}
 	} /* end getline(file, line) */
 
@@ -179,19 +205,19 @@ void LoadObject::loadOBJ(const string aInFilename,
 
 	objFile.close();
 
-	if (aVerbose) cout << "Preparing to build faces" << endl;
+	//if (aVerbose) cout << "Preparing to build faces" << endl;
 
 	//
 	// 3. Fill verts, texts, and norms lists so it can be indexed directly. 
 	//   Length = hash.size
 	//
-	for (int i = 0; i < faceHash.size() * 2; i++)
-		finalTextures.push_back(0.0f);
+	//for (int i = 0; i < faceHash.size() * 2; i++)
+	//	finalTextures.push_back(0.0f);
 
-	for (int i = 0; i < faceHash.size() * 3; i++) {
-		finalVerts.push_back(0.0f);
-		finalNorms.push_back(0.0f);
-	}
+	//for (int i = 0; i < faceHash.size() * 3; i++) {
+	//	finalVerts.push_back(0.0f);
+	//	finalNorms.push_back(0.0f);
+	//}
 
 
 	// 5. Walk through hash, extract each value in current key
@@ -204,75 +230,77 @@ void LoadObject::loadOBJ(const string aInFilename,
 	//    4. ##// ##// ##// (verts only)
 	//
 
-	if (aVerbose) cout << "Hashing list of unique vertices" << endl;
+	//if (aVerbose) cout << "Hashing list of unique vertices" << endl;
 
-	if (aVerbose) cout << faceHash.size() << " unique vertices found" << endl;
-
-	map<string, int>::iterator hashItr = faceHash.begin();
-	int faceCounter = 0;
-	while (hashItr != faceHash.end()) {
-		string faceHashKey = hashItr->first;
-		int faceHashVal = hashItr->second;
-
-		if (aVerbose) cout << "Unique face #" << faceHashVal
-			<< " = " << faceHashKey << endl;
-
-		// Default values
-		float v0 = (float)0.0f;
-		float v1 = (float)0.0f;
-		float v2 = (float)0.0f;
-
-		float t0 = (float)0.0f;
-		float t1 = (float)0.0f;
-
-		float n0 = (float)0.0f;
-		float n1 = (float)0.0f;
-		float n2 = (float)0.0f;
-
-		vector<string> vals = explode(faceHashKey, '/');
-
-		v0 = (float)verts[(atoi(vals[0].c_str()) - 1) * 3];
-		v1 = (float)verts[(atoi(vals[0].c_str()) - 1) * 3 + 1];
-		v2 = (float)verts[(atoi(vals[0].c_str()) - 1) * 3 + 2];
-
-		if (vals.size() > 1 && vals[1].size() > 0) {
-			t0 = (float)textures[(atoi(vals[1].c_str()) - 1) * 2];
-			t1 = (float)textures[(atoi(vals[1].c_str()) - 1) * 2 + 1];
-		}
-
-		if (vals.size() > 2 && vals[2].size() > 0) {
-			n0 = (float)norms[(atoi(vals[2].c_str()) - 1) * 3];
-			n1 = (float)norms[(atoi(vals[2].c_str()) - 1) * 3 + 1];
-			n2 = (float)norms[(atoi(vals[2].c_str()) - 1) * 3 + 2];
-		}
+	//if (aVerbose) cout << faceHash.size() << " unique vertices found" << endl;
 
 
-		finalVerts.at(faceHashVal * 3) = v0;
-		finalVerts.at(faceHashVal * 3 + 1) = v1;
-		finalVerts.at(faceHashVal * 3 + 2) = v2;
 
-		finalTextures.at(faceHashVal * 2) = t0;
-		finalTextures.at(faceHashVal * 2 + 1) = t1;
+	//map<string, int>::iterator hashItr = faceHash.begin();
+	//int faceCounter = 0;
+	//while (hashItr != faceHash.end()) {
+	//	string faceHashKey = hashItr->first;
+	//	int faceHashVal = hashItr->second;
 
-		finalNorms.at(faceHashVal * 3) = n0;
-		finalNorms.at(faceHashVal * 3 + 1) = n1;
-		finalNorms.at(faceHashVal * 3 + 2) = n2;
+	//	if (aVerbose) cout << "Unique face #" << faceHashVal
+	//		<< " = " << faceHashKey << endl;
+
+	//	// Default values
+	//	float v0 = (float)0.0f;
+	//	float v1 = (float)0.0f;
+	//	float v2 = (float)0.0f;
+
+	//	float t0 = (float)0.0f;
+	//	float t1 = (float)0.0f;
+
+	//	float n0 = (float)0.0f;
+	//	float n1 = (float)0.0f;
+	//	float n2 = (float)0.0f;
+
+	//	vector<string> vals = explode(faceHashKey, '/');
+
+	//	v0 = (float)verts[(atoi(vals[0].c_str()) - 1) * 3];
+	//	v1 = (float)verts[(atoi(vals[0].c_str()) - 1) * 3 + 1];
+	//	v2 = (float)verts[(atoi(vals[0].c_str()) - 1) * 3 + 2];
+
+	//	if (vals.size() > 1 && vals[1].size() > 0) {
+	//		t0 = (float)textures[(atoi(vals[1].c_str()) - 1) * 2];
+	//		t1 = (float)textures[(atoi(vals[1].c_str()) - 1) * 2 + 1];
+	//	}
+
+	//	if (vals.size() > 2 && vals[2].size() > 0) {
+	//		n0 = (float)norms[(atoi(vals[2].c_str()) - 1) * 3];
+	//		n1 = (float)norms[(atoi(vals[2].c_str()) - 1) * 3 + 1];
+	//		n2 = (float)norms[(atoi(vals[2].c_str()) - 1) * 3 + 2];
+	//	}
 
 
-		if (aVerbose) cout  << "  Vert: " << finalVerts.at(faceHashVal * 3)
-			<< " " << finalVerts.at(faceHashVal * 3 + 1)
-			<< " "
-			<< finalVerts.at(faceHashVal * 3 + 2)
-			<< "  Text: " << finalTextures.at(faceHashVal * 2)
-			<< " "
-			<< finalTextures.at(faceHashVal * 2 + 1)
-			<< "  Norm: " << finalNorms.at(faceHashVal * 3)
-			<< " "
-			<< finalNorms.at(faceHashVal * 3 + 1)
-			<< " "
-			<< finalNorms.at(faceHashVal * 3 + 2)
-			<< endl;
+	//	finalVerts.at(faceHashVal * 3) = v0;
+	//	finalVerts.at(faceHashVal * 3 + 1) = v1;
+	//	finalVerts.at(faceHashVal * 3 + 2) = v2;
 
-		hashItr++;
-	}
+	//	finalTextures.at(faceHashVal * 2) = t0;
+	//	finalTextures.at(faceHashVal * 2 + 1) = t1;
+
+	//	finalNorms.at(faceHashVal * 3) = n0;
+	//	finalNorms.at(faceHashVal * 3 + 1) = n1;
+	//	finalNorms.at(faceHashVal * 3 + 2) = n2;
+
+
+	//	if (aVerbose) cout  << "  Vert: " << finalVerts.at(faceHashVal * 3)
+	//		<< " " << finalVerts.at(faceHashVal * 3 + 1)
+	//		<< " "
+	//		<< finalVerts.at(faceHashVal * 3 + 2)
+	//		<< "  Text: " << finalTextures.at(faceHashVal * 2)
+	//		<< " "
+	//		<< finalTextures.at(faceHashVal * 2 + 1)
+	//		<< "  Norm: " << finalNorms.at(faceHashVal * 3)
+	//		<< " "
+	//		<< finalNorms.at(faceHashVal * 3 + 1)
+	//		<< " "
+	//		<< finalNorms.at(faceHashVal * 3 + 2)
+	//		<< endl;
+
+	//	hashItr++;
+	//}
 }

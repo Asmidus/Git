@@ -108,18 +108,13 @@ bool Model::init()
 	//Pass the values needed for the Brick Procedural Texture code to the shaders
 	//TODO: Try adjusting the values passed to the shader to see their effects on the display
 	GLuint shaderLoc;
-	shaderLoc = glGetUniformLocation(program, "BrickColor");
-	glUniform3f(shaderLoc, 0.3, 0.1, 0.1);
-	shaderLoc = glGetUniformLocation(program, "MortarColor");
-	glUniform3f(shaderLoc, 0.5, 0.5, 0.5);
-	shaderLoc = glGetUniformLocation(program, "BrickSize");
-	glUniform2f(shaderLoc, 0.5, 0.2);
-	shaderLoc = glGetUniformLocation(program, "BrickPct");
-	glUniform2f(shaderLoc, .95, .95);
-
+	shaderLoc = glGetUniformLocation(program, "VeinColor");
+	glUniform3f(shaderLoc, 0.0, 0.0, 0.8);
+	shaderLoc = glGetUniformLocation(program, "MarbleColor");
+	glUniform3f(shaderLoc, 0.8, 0.0, 0.8);
 	//The following code creates a "noise" texture to send to the fragment shader
 	GLuint texID;
-	const int TexWidth = 400, TexHeight = 400;
+	const int TexWidth = 4, TexHeight = 4;
 	unsigned char NoiseTex[TexHeight][TexWidth][4];
 	for (int r = 0; r < TexHeight; r++)
 	{
@@ -140,6 +135,10 @@ bool Model::init()
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	shaderLoc = glGetUniformLocation(program, "Noise");
+	glUniform1i(shaderLoc, 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texID);
 
 	//Get the locations of the matrices
 	modelMatrixLoc = glGetUniformLocation(program, "modelMatrix");

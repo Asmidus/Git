@@ -70,8 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\astro\Desktop\Code\Git\Graphics\Assignment6\assimp\include;C:\0Programming\glm\glm;C:\0Programming\SDL2\include;C:\0Programming\glew-2.1.0\include\GL;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\0Programming\SDL2\lib\x86;C:\0Programming\glew-2.1.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\0Programming\glm;C:\0Programming\SDL2\include;C:\0Programming\GLEW\include\GL;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\0Programming\SDL2\lib\x86;C:\0Programming\GLEW\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\0Programming\SDL2\include;C:\0Programming\GLEW\include\GL;C:\0Programming\glm;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\0Programming\SDL2\lib\x86;C:\0Programming\GLEW\lib\Release\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

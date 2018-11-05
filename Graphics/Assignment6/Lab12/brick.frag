@@ -42,9 +42,7 @@ in float shininess;
 
 //"New" variables for the brick procedural shader
 in vec2 MCposition;
-uniform vec3 BrickColor, MortarColor;
-uniform vec2 BrickSize;
-uniform vec2 BrickPct;
+uniform vec3 VeinColor, MarbleColor;
 uniform sampler2D Noise;
 
 out vec4 FragColor;
@@ -52,7 +50,10 @@ out vec4 FragColor;
 //Implement examples 8.4 and 8.12 in the the OpenGL Programming Guide (8th edition)
 vec3 makeBrickTex()
 {
-	vec3 color = vec3(0.0, 1.0, 1.0);
+	vec4 noisevec = texture(Noise, MCposition);
+	float intensity = abs(noisevec[0] - 0.25) + abs(noisevec[1] - 0.125) + abs(noisevec[2] - 0.0625) + abs(noisevec[3] - 0.03125);
+	float sineval = sin(MCposition.y * 6.0 + intensity * 12.0)* 0.5 + 0.5;
+	vec3 color = mix(VeinColor, MarbleColor, sineval);
 	return color;
 }
 
@@ -73,7 +74,7 @@ void main()
 	//described in Example 8.12 on pages 456 and 457 of the OpenGL Programming Guide (8th edition)
 
 	//TODO #3: Add some noise to the color	
-	color *= addNoise();
+	//color *= addNoise();
 
 	vec3 surfaceDiffuseColor = color; //use the color computed by the procedural texture code as the diffuse color 
 	vec3 surfaceSpecularColor = vec3(0.0, 0.0, 0.0); //Make it black so that there will be no specular highlights
