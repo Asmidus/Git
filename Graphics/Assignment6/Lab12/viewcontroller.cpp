@@ -21,8 +21,8 @@
 #include <iostream>
 using namespace std;
 
-const int WINDOWWIDTH = 800;
-const int WINDOWHEIGHT = 800;
+const int WINDOWWIDTH = 600;
+const int WINDOWHEIGHT = 600;
 
 Viewcontroller::Viewcontroller()
 {

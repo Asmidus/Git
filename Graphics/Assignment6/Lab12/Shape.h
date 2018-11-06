@@ -3,14 +3,19 @@
 #include <vector>
 #include <glm.hpp>
 
+using namespace std;
+
 class Shape {
 	private:
 		bool initialized;
-		std::vector<float> vertices;
-		std::vector<float> textures;
-		std::vector<float> normals;
-		std::vector<int> faces;
-		GLuint Buffer[3];  //We'll need a buffer for the vertex positions
+		vector<glm::vec3> vertices;
+		vector<glm::vec3> normals;
+		vector<glm::vec2> uvs;
+		vector<glm::vec2> matRanges;
+		vector<glm::vec4> materials;
+		vector<string> textures;
+		vector<unsigned short> indices;
+		GLuint Buffer[4];  //We'll need a buffer for the vertex positions
 
 	public:
 		Shape();

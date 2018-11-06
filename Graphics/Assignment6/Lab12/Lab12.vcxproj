@@ -127,24 +127,34 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="cube.h" />
+    <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="LightProperties.h" />
     <ClInclude Include="LoadObject.h" />
     <ClInclude Include="LoadShaders.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="picoPNG.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Shape.h" />
+    <ClInclude Include="TextureCache.h" />
+    <ClInclude Include="vboindexer.hpp" />
     <ClInclude Include="viewcontroller.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="brick.frag" />
-    <None Include="brick.vert" />
+    <None Include="shader.frag" />
+    <None Include="shader.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cube.cpp" />
+    <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="LoadObject.cpp" />
     <ClCompile Include="LoadShaders.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="picoPNG.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="TextureCache.cpp" />
+    <ClCompile Include="vboindexer.cpp" />
     <ClCompile Include="viewcontroller.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

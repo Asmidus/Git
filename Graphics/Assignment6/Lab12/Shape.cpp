@@ -1,31 +1,56 @@
 #include "Shape.h"
 #include "LoadObject.h"
+#include "vboindexer.hpp"
+#include "ResourceManager.h"
 
 
 
 Shape::Shape() {}
 
 bool Shape::init() {
-	LoadObject::loadOBJ("cylinder.obj", vertices, normals, textures, faces, true);
-	glGenBuffers(3, &Buffer[0]); //Create a buffer objects for vertex positions
+	vector<glm::vec3> verts;
+	vector<glm::vec3> norms;
+	vector<glm::vec2> uvTemp;
+	LoadObject::loadOBJ("sphere.obj", verts, norms, uvTemp, matRanges, materials, textures);
+	indexVBO(verts, norms, uvTemp, indices, vertices, normals, uvs);
+	cout << "Finished loading object" << endl;
+
+	glGenBuffers(4, &Buffer[0]); //Create a buffer objects for vertex positions
 	glBindBuffer(GL_ARRAY_BUFFER, Buffer[0]);  //Buffers[0] will be the position for each vertex
-	glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(float), vertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 3*vertices.size()*sizeof(float), vertices.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);  //Do the shader plumbing here for this buffer
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, Buffer[2]);  //Buffers[0] will be the position for each vertex
-	glBufferData(GL_ARRAY_BUFFER, normals.size()*sizeof(float), normals.data(), GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, Buffer[1]);  //Buffers[1] will be the normal for each vertex
+	glBufferData(GL_ARRAY_BUFFER, 3*normals.size()*sizeof(float), normals.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);  //Do the shader plumbing here for this buffer
 	glEnableVertexAttribArray(2);
+
+	glBindBuffer(GL_ARRAY_BUFFER, Buffer[2]);
+	glBufferData(GL_ARRAY_BUFFER, 2*uvs.size()*sizeof(float), uvs.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(3);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffer[3]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), &indices[0], GL_STATIC_DRAW);
 	initialized = true;
 	return true;
 }
 
 void Shape::draw() {
-	//glBindVertexArray(VAO);
-	glVertexAttrib1f(3, 25.0);	//All sides will have the same "shininess". This might seem
-								//counterintuitive, but the smaller this number the more
-								//noticable the specular highlights will be.
-	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+	glEnable(GL_TEXTURE_2D);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffer[3]);
+	for (int i = 0; i < matRanges.size(); i++) {
+		GLTexture currTexture = ResourceManager::getTexture("images/" + textures[i]);
+		glBindTexture(GL_TEXTURE_2D, currTexture.id);
+		//glDrawElements(
+		//	GL_TRIANGLES,
+		//	(matRanges[i].y-matRanges[i].x + 1)*3,
+		//	GL_UNSIGNED_SHORT,
+		//	(void*)((int)matRanges[i].x*sizeof(unsigned short))
+		//);
+		glDrawArrays(GL_TRIANGLES, matRanges[i].x, matRanges[i].y-matRanges[i].x);
+	}
 }
 
 

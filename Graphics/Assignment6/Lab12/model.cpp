@@ -51,8 +51,8 @@ bool Model::init()
 	//Finally, we need to load the shaders. I am using the LoadShaders() function written  
 	//by the authors of the OpenGL Programming Guide (8th edition).
 	ShaderInfo shaders[] = {
-			{ GL_VERTEX_SHADER, "brick.vert" },
-			{ GL_FRAGMENT_SHADER, "brick.frag" },
+			{ GL_VERTEX_SHADER, "shader.vert" },
+			{ GL_FRAGMENT_SHADER, "shader.frag" },
 			{ GL_NONE, NULL }
 	};
 	GLuint program;
@@ -61,6 +61,7 @@ bool Model::init()
 		cout << "Error Loading Shaders" << endl;
 		return false;
 	}
+	glUniform1i(glGetUniformLocation(program, "texSampler"), 0);
 	glUseProgram(program);
 
 	//Now initialize all of our models
@@ -104,41 +105,6 @@ bool Model::init()
 	glBindBuffer(GL_UNIFORM_BUFFER, lightsLoc);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(lights), lights, GL_DYNAMIC_DRAW);
 	glBindBufferBase(GL_UNIFORM_BUFFER, 0, lightsLoc);
-
-	//Pass the values needed for the Brick Procedural Texture code to the shaders
-	//TODO: Try adjusting the values passed to the shader to see their effects on the display
-	GLuint shaderLoc;
-	shaderLoc = glGetUniformLocation(program, "VeinColor");
-	glUniform3f(shaderLoc, 0.0, 0.0, 0.8);
-	shaderLoc = glGetUniformLocation(program, "MarbleColor");
-	glUniform3f(shaderLoc, 0.8, 0.0, 0.8);
-	//The following code creates a "noise" texture to send to the fragment shader
-	GLuint texID;
-	const int TexWidth = 4, TexHeight = 4;
-	unsigned char NoiseTex[TexHeight][TexWidth][4];
-	for (int r = 0; r < TexHeight; r++)
-	{
-		for (int c = 0; c < TexWidth; c++)
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				NoiseTex[r][c][i] = (unsigned char)(rand() % 128) + 128;
-			}
-		}
-	}
-	glGenTextures(1, &texID);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texID);
-	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, TexWidth, TexHeight);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TexWidth, TexHeight, GL_RGBA, GL_UNSIGNED_BYTE, NoiseTex);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	shaderLoc = glGetUniformLocation(program, "Noise");
-	glUniform1i(shaderLoc, 0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texID);
 
 	//Get the locations of the matrices
 	modelMatrixLoc = glGetUniformLocation(program, "modelMatrix");

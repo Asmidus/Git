@@ -17,10 +17,12 @@ vector<string> LoadObject::explode(string aStr, char aDelim) {
 }
 
 void LoadObject::loadOBJ(const string aInFilename,
-	vector<float>& finalVerts,
-	vector<float>& finalNorms,
-	vector<float>& finalTextures,
-	vector<int>& finalFaces,
+	vector<glm::vec3>& finalVerts,
+	vector<glm::vec3>& finalNorms,
+	vector<glm::vec2>& finalUVs,
+	vector<glm::vec2>& finalMatRanges,
+	vector<glm::vec4>& finalMaterials,
+	vector<string>& textures,
 	bool aVerbose) {
 	if (aVerbose) cout << "Loading OBJ file <"
 		<< aInFilename << ">" << endl;
@@ -33,12 +35,16 @@ void LoadObject::loadOBJ(const string aInFilename,
 		exit(1);
 	}
 	// Extract verts, normals, textures, and faces
-	vector<float> verts, norms, textures;
+	vector<float> verts, norms, uvs;
 	vector<int> faces;
 	map<string, int> faceHash;
 
 	string line;
+	string mtlFileName;
+	int numFaces = 0;
 	int hashIndex = 0;
+	int prevIndex = 0;
+	int numTextures = 0;
 
 	if (aVerbose) cout << "Extracting values from file" << endl;
 
@@ -67,19 +73,19 @@ void LoadObject::loadOBJ(const string aInFilename,
 
 		// Extract textures
 		// Line starts with vt[space]...
-		else if (line[0] == 'v' && line[1] == 't' && line[2] == ' ') {
-			string lineVals = line.substr(3);
-			float val;
+		//else if (line[0] == 'v' && line[1] == 't' && line[2] == ' ') {
+		//	string lineVals = line.substr(3);
+		//	float val;
 
-			string val0 = lineVals.substr(0, lineVals.find(' '));
-			val = (float)atof(val0.c_str());
-			textures.push_back(val);
+		//	string val0 = lineVals.substr(0, lineVals.find(' '));
+		//	val = (float)atof(val0.c_str());
+		//	textures.push_back(val);
 
-			string val1 = lineVals.substr(val0.length() + 1,
-				lineVals.find(' '));
-			val = (float)atof(val1.c_str());
-			textures.push_back(val);
-		}
+		//	string val1 = lineVals.substr(val0.length() + 1,
+		//		lineVals.find(' '));
+		//	val = (float)atof(val1.c_str());
+		//	textures.push_back(val);
+		//}
 
 
 		// Extract normals
@@ -102,12 +108,20 @@ void LoadObject::loadOBJ(const string aInFilename,
 			norms.push_back(val);
 		}
 
+		else if (line[0] == 'v' && line[1] == 't' && line[2] == ' ') {
+			string lineVals = line.substr(3);
+			float val;
 
-		//
-		// 2. Hash faces
-		//
-		// Extract faces
-		// Line starts with f[space]...
+			string val0 = lineVals.substr(0, lineVals.find(' '));
+			val = (float)atof(val0.c_str());
+			uvs.push_back(val);
+
+			string val1 = lineVals.substr(val0.length() + 1,
+				lineVals.find(' '));
+			val = (float)atof(val1.c_str());
+			uvs.push_back(val);
+		}
+
 		else if (line[0] == 'f' && line[1] == ' ') {
 			string lineVals = line.substr(2);
 
@@ -134,67 +148,44 @@ void LoadObject::loadOBJ(const string aInFilename,
 				int vert2 = (int)atof(str2.c_str());
 				string str3 = g3.substr(0, g3.find_first_of('/'));
 				int vert3 = (int)atof(str3.c_str());
+
+				string uvStr1 = g1.substr(g1.find_first_of('/') + 1, g1.find_last_of('/') - g1.find_first_of('/') - 1);
+				int uv1 = (int)atof(uvStr1.c_str());
+				string uvStr2 = g2.substr(g2.find_first_of('/') + 1, g2.find_last_of('/') - g2.find_first_of('/') - 1);
+				int uv2 = (int)atof(uvStr2.c_str());
+				string uvStr3 = g3.substr(g3.find_first_of('/') + 1, g3.find_last_of('/') - g3.find_first_of('/') - 1);
+				int uv3 = (int)atof(uvStr3.c_str());
+
 				string str4 = g1.substr(g1.find_last_of('/') + 1, g1.length());
 				int norm = (int)atof(str4.c_str());
-				finalVerts.push_back(verts[(vert1 - 1)*3]);
-				finalVerts.push_back(verts[(vert1 - 1)*3+1]);
-				finalVerts.push_back(verts[(vert1 - 1)*3+2]);
-				finalVerts.push_back(verts[(vert2 - 1)*3]);
-				finalVerts.push_back(verts[(vert2 - 1)*3+1]);
-				finalVerts.push_back(verts[(vert2 - 1)*3+2]);
-				finalVerts.push_back(verts[(vert3 - 1)*3]);
-				finalVerts.push_back(verts[(vert3 - 1)*3+1]);
-				finalVerts.push_back(verts[(vert3 - 1)*3+2]);
-				finalNorms.push_back(norms[(norm - 1)*3]);
-				finalNorms.push_back(norms[(norm - 1)*3+1]);
-				finalNorms.push_back(norms[(norm - 1)*3+2]);
-				finalNorms.push_back(norms[(norm - 1)*3]);
-				finalNorms.push_back(norms[(norm - 1)*3+1]);
-				finalNorms.push_back(norms[(norm - 1)*3+2]);
-				finalNorms.push_back(norms[(norm - 1)*3]);
-				finalNorms.push_back(norms[(norm - 1)*3+1]);
-				finalNorms.push_back(norms[(norm - 1)*3+2]);
+				finalVerts.emplace_back(verts[(vert1 - 1)*3], verts[(vert1 - 1)*3+1], verts[(vert1 - 1)*3+2]);
+				finalVerts.emplace_back(verts[(vert2 - 1)*3], verts[(vert2 - 1)*3+1], verts[(vert2 - 1)*3+2]);
+				finalVerts.emplace_back(verts[(vert3 - 1)*3], verts[(vert3 - 1)*3+1], verts[(vert3 - 1)*3+2]);
 
-			//	// Just stick all the unique values in this hash and give each key a 
-			//	// unique, increasing value
-			//	map<string, int>::iterator itr;
-
-			//	//
-			//	// Add key's position to the faces list
-			//	//
-
-			//	itr = faceHash.find(g1);
-			//	// If key not in map
-			//	if (itr == faceHash.end()) {
-			//		faceHash[g1] = hashIndex++;
-			//	}
-			//	itr = faceHash.find(g1);
-			//	faces.push_back(itr->second);
-
-			//	itr = faceHash.find(g2);
-			//	// If key not in map
-			//	if (itr == faceHash.end()) {
-			//		faceHash[g2] = hashIndex++;
-			//	}
-			//	itr = faceHash.find(g2);
-			//	faces.push_back(itr->second);
-
-			//	itr = faceHash.find(g3);
-			//	// If key not in map
-			//	if (itr == faceHash.end()) {
-			//		faceHash[g3] = hashIndex++;
-			//	}
-			//	itr = faceHash.find(g3);
-			//	faces.push_back(itr->second);
+				finalUVs.emplace_back(uvs[(uv1 - 1)*2], uvs[(uv1 - 1)*2+1]);
+				finalUVs.emplace_back(uvs[(uv2 - 1)*2], uvs[(uv2 - 1)*2+1]);
+				finalUVs.emplace_back(uvs[(uv3 - 1)*2], uvs[(uv3 - 1)*2+1]);
+				for (int i = 0; i < 3; i++) {					//push back the x y z of the normal for each vertex added
+					finalNorms.emplace_back(norms[(norm - 1)*3], norms[(norm - 1)*3+1], norms[(norm - 1)*3+2]);
+				}
+				numFaces++;
 			}
-
-			//// Only verts in file
-			//else {
-			//	// Push faces straight up -- converting to 
-			//	// base zero in the process
-			//}
+		} else if (line.substr(0, 6) == "mtllib") {
+			mtlFileName = line.substr(7, line.length());
+		} else if (line.substr(0, 6) == "usemtl") {
+			if (numTextures != 0) {
+				prevIndex = finalVerts.size();
+				finalMatRanges.back().y = prevIndex;
+				finalMatRanges.emplace_back(prevIndex, 0);
+			} else {
+				finalMatRanges.emplace_back(prevIndex, 0);
+			}
+			numTextures++;
 		}
 	} /* end getline(file, line) */
+
+	finalMatRanges.back().y = finalVerts.size();
+	int x = 0;
 
 	if (aVerbose) cout  << "Finished extracting values from file" << endl
 		<< "Quick count check:" << endl
@@ -204,103 +195,14 @@ void LoadObject::loadOBJ(const string aInFilename,
 		<< "\tFaces = " << faces.size() << endl;
 
 	objFile.close();
-
-	//if (aVerbose) cout << "Preparing to build faces" << endl;
-
-	//
-	// 3. Fill verts, texts, and norms lists so it can be indexed directly. 
-	//   Length = hash.size
-	//
-	//for (int i = 0; i < faceHash.size() * 2; i++)
-	//	finalTextures.push_back(0.0f);
-
-	//for (int i = 0; i < faceHash.size() * 3; i++) {
-	//	finalVerts.push_back(0.0f);
-	//	finalNorms.push_back(0.0f);
-	//}
-
-
-	// 5. Walk through hash, extract each value in current key
-	// * Remember to make faces array zero based
-	//
-	// Cases for keys:
-	//    1. ## ## ## (verts only)
-	//    2. ##/## ##/## ##/## (verts and textures)
-	//    3. ##//## ##//## ##//## (verts and normals)
-	//    4. ##// ##// ##// (verts only)
-	//
-
-	//if (aVerbose) cout << "Hashing list of unique vertices" << endl;
-
-	//if (aVerbose) cout << faceHash.size() << " unique vertices found" << endl;
-
-
-
-	//map<string, int>::iterator hashItr = faceHash.begin();
-	//int faceCounter = 0;
-	//while (hashItr != faceHash.end()) {
-	//	string faceHashKey = hashItr->first;
-	//	int faceHashVal = hashItr->second;
-
-	//	if (aVerbose) cout << "Unique face #" << faceHashVal
-	//		<< " = " << faceHashKey << endl;
-
-	//	// Default values
-	//	float v0 = (float)0.0f;
-	//	float v1 = (float)0.0f;
-	//	float v2 = (float)0.0f;
-
-	//	float t0 = (float)0.0f;
-	//	float t1 = (float)0.0f;
-
-	//	float n0 = (float)0.0f;
-	//	float n1 = (float)0.0f;
-	//	float n2 = (float)0.0f;
-
-	//	vector<string> vals = explode(faceHashKey, '/');
-
-	//	v0 = (float)verts[(atoi(vals[0].c_str()) - 1) * 3];
-	//	v1 = (float)verts[(atoi(vals[0].c_str()) - 1) * 3 + 1];
-	//	v2 = (float)verts[(atoi(vals[0].c_str()) - 1) * 3 + 2];
-
-	//	if (vals.size() > 1 && vals[1].size() > 0) {
-	//		t0 = (float)textures[(atoi(vals[1].c_str()) - 1) * 2];
-	//		t1 = (float)textures[(atoi(vals[1].c_str()) - 1) * 2 + 1];
-	//	}
-
-	//	if (vals.size() > 2 && vals[2].size() > 0) {
-	//		n0 = (float)norms[(atoi(vals[2].c_str()) - 1) * 3];
-	//		n1 = (float)norms[(atoi(vals[2].c_str()) - 1) * 3 + 1];
-	//		n2 = (float)norms[(atoi(vals[2].c_str()) - 1) * 3 + 2];
-	//	}
-
-
-	//	finalVerts.at(faceHashVal * 3) = v0;
-	//	finalVerts.at(faceHashVal * 3 + 1) = v1;
-	//	finalVerts.at(faceHashVal * 3 + 2) = v2;
-
-	//	finalTextures.at(faceHashVal * 2) = t0;
-	//	finalTextures.at(faceHashVal * 2 + 1) = t1;
-
-	//	finalNorms.at(faceHashVal * 3) = n0;
-	//	finalNorms.at(faceHashVal * 3 + 1) = n1;
-	//	finalNorms.at(faceHashVal * 3 + 2) = n2;
-
-
-	//	if (aVerbose) cout  << "  Vert: " << finalVerts.at(faceHashVal * 3)
-	//		<< " " << finalVerts.at(faceHashVal * 3 + 1)
-	//		<< " "
-	//		<< finalVerts.at(faceHashVal * 3 + 2)
-	//		<< "  Text: " << finalTextures.at(faceHashVal * 2)
-	//		<< " "
-	//		<< finalTextures.at(faceHashVal * 2 + 1)
-	//		<< "  Norm: " << finalNorms.at(faceHashVal * 3)
-	//		<< " "
-	//		<< finalNorms.at(faceHashVal * 3 + 1)
-	//		<< " "
-	//		<< finalNorms.at(faceHashVal * 3 + 2)
-	//		<< endl;
-
-	//	hashItr++;
-	//}
+	ifstream mtlFile(mtlFileName.c_str());
+	while (getline(mtlFile, line)) {
+		if (line.substr(0, 6) == "newmtl") {
+			finalMaterials.emplace_back(0);
+		}
+		if (line.substr(0, 6) == "map_Kd") {
+			//textures.push_back(line.substr(line.find_last_of('\\') + 1, line.length()));
+			textures.insert(textures.begin(), line.substr(line.find_last_of('\\') + 1, line.length()));
+		}
+	}
 }
