@@ -47,8 +47,13 @@ out vec4 FragColor;
 void main()
 {
 	//vec3 color = vec3(0, 0, 1);
-	vec4 textureColor = texture(texSampler, fragmentUV);
-	vec3 color = vec3(textureColor.r, textureColor.g, textureColor.b);
+	vec3 color;
+	if(fColor.w == -1) {
+		vec4 textureColor = texture(texSampler, fragmentUV);
+		color = vec3(textureColor.r, textureColor.g, textureColor.b);
+	} else {
+		color = vec3(fColor.r, fColor.g, fColor.b);
+	}
 	vec3 surfaceDiffuseColor = color; //use the color computed by the procedural texture code as the diffuse color 
 	vec3 surfaceSpecularColor = vec3(0.0, 0.0, 0.0); //Make it black so that there will be no specular highlights
 	vec3 scatteredLight = globalAmbientLight*surfaceDiffuseColor; //initialize scatteredLight to the global ambience*fragment color

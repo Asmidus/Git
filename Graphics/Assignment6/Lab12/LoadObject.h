@@ -8,6 +8,13 @@
 
 using namespace std;
 
+struct Material {
+	string materialName;
+	string texName;
+	glm::vec4 Kd;
+	glm::vec2 range;
+};
+
 class LoadObject {
 public:
 	static void loadOBJ(const string aInFilename,
@@ -15,7 +22,7 @@ public:
 		vector<glm::vec3>& finalNorms,
 		vector<glm::vec2>& finalUVs,
 		vector<glm::vec2>& finalMatRanges,
-		vector<glm::vec4>& finalMaterials,
+		map<string, Material>& finalMaterials,
 		vector<string>& textures,
 		bool aVerbose = false);
 	static vector<string> explode(string aStr, char aDelim);
