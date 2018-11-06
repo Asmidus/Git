@@ -65,6 +65,7 @@ bool Model::init()
 	glUseProgram(program);
 
 	//Now initialize all of our models
+	c.fileName = "sceneTest.obj";
 	c.init();
 
 	//Now, set up the lights for the scene

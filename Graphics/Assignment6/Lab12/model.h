@@ -13,6 +13,7 @@
 #include "LightProperties.h"
 #include "cube.h"
 #include "Shape.h"
+
 using namespace glm;
 
 class Model

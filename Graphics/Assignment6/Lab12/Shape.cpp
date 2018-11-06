@@ -7,11 +7,13 @@
 
 Shape::Shape() {}
 
-bool Shape::init() {
+Shape::Shape(string file) : fileName(file) {}
+
+bool Shape::init(string fileName) {
 	vector<glm::vec3> verts;
 	vector<glm::vec3> norms;
 	vector<glm::vec2> uvTemp;
-	LoadObject::loadOBJ("cube3.obj", verts, norms, uvTemp, matRanges, materials, textures);
+	LoadObject::loadOBJ(fileName, verts, norms, uvTemp, matRanges, materials, textures);
 	indexVBO(verts, norms, uvTemp, indices, vertices, normals, uvs);
 	cout << "Finished loading object" << endl;
 
@@ -45,6 +47,7 @@ bool Shape::init() {
 void Shape::draw() {
 	glEnable(GL_TEXTURE_2D);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffer[3]);
+	//glVertexAttrib4f(1, 0.5, 0.5, 0.5, 1);
 	for (int i = 0; i < matRanges.size(); i++) {
 		glVertexAttrib4f(1, materials[textures[i]].Kd.r, materials[textures[i]].Kd.g, materials[textures[i]].Kd.b, materials[textures[i]].Kd.a);
 		if (materials[textures[i]].texName != "") {
