@@ -7,15 +7,31 @@
 
 Shape::Shape() {}
 
-Shape::Shape(string file) : fileName(file) {}
-
-bool Shape::init(string fileName) {
+bool Shape::init(string fileName, bool smooth) {
 	vector<glm::vec3> verts;
 	vector<glm::vec3> norms;
 	vector<glm::vec2> uvTemp;
 	LoadObject::loadOBJ(fileName, verts, norms, uvTemp, matRanges, materials, textures);
-	indexVBO(verts, norms, uvTemp, indices, vertices, normals, uvs);
-	cout << "Finished loading object" << endl;
+	if (smooth) {
+		indexVBO(verts, norms, uvTemp, indices, vertices, normals, uvs);
+		verts.clear();
+		norms.clear();
+		for (int i = 0; i < indices.size(); i++) {
+			int index = indices[i];
+			verts.push_back(vertices[index]);
+			norms.push_back(normals[index]);
+		}
+	}
+	uvs = uvTemp;
+	vertices = verts;
+	normals = norms;
+	cout << "Finished loading object of " << vertices.size() << "vertices" << endl;
+	//for (int i = 0; i < vertices.size(); i++) {
+	//	int j = i;
+	//	cout << "V " << vertices[j].x << " " << vertices[j].y << " " << vertices[j].z
+	//		<< " N " << normals[j].x << " " << normals[j].y << " " << normals[j].z << endl;
+	//		//<< " U " << uvs[i].x << uvs[i].y << endl;
+	//}
 
 	glGenBuffers(4, &Buffer[0]); //Create a buffer objects for vertex positions
 	glBindBuffer(GL_ARRAY_BUFFER, Buffer[0]);  //Buffers[0] will be the position for each vertex
@@ -37,8 +53,7 @@ bool Shape::init(string fileName) {
 	glBufferData(GL_ARRAY_BUFFER, 2*uvs.size()*sizeof(float), uvs.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(3);
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffer[3]);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffer[1]);
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), &indices[0], GL_STATIC_DRAW);
 	initialized = true;
 	return true;
@@ -47,7 +62,7 @@ bool Shape::init(string fileName) {
 void Shape::draw() {
 	glEnable(GL_TEXTURE_2D);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffer[3]);
-	//glVertexAttrib4f(1, 0.5, 0.5, 0.5, 1);
+	//glVertexAttrib4f(1, 0.67, 0.1, 0.5, 1);
 	for (int i = 0; i < matRanges.size(); i++) {
 		glVertexAttrib4f(1, materials[textures[i]].Kd.r, materials[textures[i]].Kd.g, materials[textures[i]].Kd.b, materials[textures[i]].Kd.a);
 		if (materials[textures[i]].texName != "") {

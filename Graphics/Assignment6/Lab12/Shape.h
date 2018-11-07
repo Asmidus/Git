@@ -22,7 +22,7 @@ class Shape {
 		Shape();
 		~Shape();
 
-		bool init(string fileName);
+		bool init(string fileName, bool smooth = true);
 		void draw();
 };
 

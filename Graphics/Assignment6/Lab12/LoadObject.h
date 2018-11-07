@@ -25,6 +25,5 @@ public:
 		map<string, Material>& finalMaterials,
 		vector<string>& textures,
 		bool aVerbose = false);
-	static vector<string> explode(string aStr, char aDelim);
 };
 

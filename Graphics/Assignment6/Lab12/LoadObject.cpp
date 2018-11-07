@@ -1,21 +1,6 @@
 #include "LoadObject.h"
 using namespace std;
 
-vector<string> LoadObject::explode(string aStr, char aDelim) {
-	vector<string> res;
-	string str = aStr.substr(0, aStr.find(aDelim));
-
-	while (str.size() < aStr.size()) {
-		res.push_back(str);
-		aStr = aStr.substr(aStr.find(aDelim) + 1);
-		str = aStr.substr(0, aStr.find(aDelim));
-	}
-
-	res.push_back(str);
-
-	return res;
-}
-
 void LoadObject::loadOBJ(const string aInFilename,
 	vector<glm::vec3>& finalVerts,
 	vector<glm::vec3>& finalNorms,
