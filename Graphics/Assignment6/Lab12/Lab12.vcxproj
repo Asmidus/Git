@@ -77,6 +77,10 @@
     <IncludePath>C:\0Programming\SDL2\include;C:\0Programming\GLEW\include\GL;C:\0Programming\glm;$(IncludePath)</IncludePath>
     <LibraryPath>C:\0Programming\SDL2\lib\x86;C:\0Programming\GLEW\lib\Release\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>C:\0Programming\glm;C:\0Programming\SDL2\include;C:\0Programming\GLEW\include\GL;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\0Programming\SDL2\lib\x86;C:\0Programming\GLEW\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -105,10 +109,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>sdl.lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -35,6 +35,8 @@ class Model
 		Shape c;
 		float yAngle;
 		float xAngle;
+		float xPos, yPos, zPos;
+		glm::vec3 eye;
 
 		float degreesToRadians(float degrees) { return (degrees * (3.14159 / 180.0)); }
 

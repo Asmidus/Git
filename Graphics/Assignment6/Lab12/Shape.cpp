@@ -26,12 +26,6 @@ bool Shape::init(string fileName, bool smooth) {
 	vertices = verts;
 	normals = norms;
 	cout << "Finished loading object of " << vertices.size() << "vertices" << endl;
-	//for (int i = 0; i < vertices.size(); i++) {
-	//	int j = i;
-	//	cout << "V " << vertices[j].x << " " << vertices[j].y << " " << vertices[j].z
-	//		<< " N " << normals[j].x << " " << normals[j].y << " " << normals[j].z << endl;
-	//		//<< " U " << uvs[i].x << uvs[i].y << endl;
-	//}
 
 	glGenBuffers(4, &Buffer[0]); //Create a buffer objects for vertex positions
 	glBindBuffer(GL_ARRAY_BUFFER, Buffer[0]);  //Buffers[0] will be the position for each vertex

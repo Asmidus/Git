@@ -65,10 +65,9 @@ bool Model::init()
 	glUseProgram(program);
 
 	//Now initialize all of our models
-	c.init("sceneTest.obj", true);
-
+	c.init("sceneTest2.obj");
 	//Now, set up the lights for the scene
-	totalLights = 1;
+	totalLights = 3;
 	lights[0].color = vec4(1.0, 1.0, 1.0, 1.0);
 	lights[0].position = vec4(0.0, 0.0, 4.0, 1.0); //positional light since w = 1
 	//lights[0].spotLightValues = vec4(1.0, 0.99, 4.0, 0.0);
@@ -122,10 +121,38 @@ bool Model::init()
 	return true;  //Everything got initialized
 }
 
+mat4 FPSViewRH(vec3 eye, float pitch, float yaw) {
+	// I assume the values are already converted to radians.
+	float cosPitch = cos(pitch);
+	float sinPitch = sin(pitch);
+	float cosYaw = cos(yaw);
+	float sinYaw = sin(yaw);
+
+	vec3 xaxis = { cosYaw, 0, -sinYaw };
+	vec3 yaxis = { sinYaw * sinPitch, cosPitch, cosYaw * sinPitch };
+	vec3 zaxis = { sinYaw * cosPitch, -sinPitch, cosPitch * cosYaw };
+
+	// Create a 4x4 view matrix from the right, up, forward and eye position vectors
+	mat4 viewMatrix = {
+		vec4(xaxis.x,            yaxis.x,            zaxis.x,      0),
+		vec4(xaxis.y,            yaxis.y,            zaxis.y,      0),
+		vec4(xaxis.z,            yaxis.z,            zaxis.z,      0),
+		vec4(-dot(xaxis, eye), -dot(yaxis, eye), -dot(zaxis, eye), 1)
+	};
+	return viewMatrix;
+}
+
 void Model::update(float x, float y)
 {
 	xAngle = x;
 	yAngle = y;
+	//eye += glm::vec3(0.01, 0, 0) * glm::vec3(cos(y));
+	//vec3 aim = vec3(0.0, 0.0, 1.0);
+	//vec3 up = vec3(0.0, 1.0, 0.0);
+	//view_matrix = FPSViewRH(eye, x/100, y/100);
+	//projection_matrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.1, 20.0);
+	//glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, value_ptr(view_matrix));
+	//glUniformMatrix4fv(projectionMatrixLoc, 1, GL_FALSE, value_ptr(projection_matrix));
 }
 
 void Model::updateLights(int lightToggles[3])
@@ -143,8 +170,23 @@ void Model::draw()
 	//Calculate the rotation based on the xAngle and yAngle variables computed in handleEvents
 	vec3 xAxis(1.0, 0.0, 0.0);
 	vec3 yAxis(0.0, 1.0, 0.0);
+
+	//for (int i = 0; i < 3; i++) {
+	//	for (int j = 0; j < 3; j++) {
+	//		for (int k = 0; k < 3; k++) {
+	//			model_matrix = rotate(mat4(1.0), degreesToRadians(yAngle), yAxis);
+	//			model_matrix = rotate(model_matrix, degreesToRadians(xAngle), xAxis);
+	//			model_matrix = translate(model_matrix, glm::vec3(i*8-4, j*8-14, k*8-4));
+	//			glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, value_ptr(model_matrix));
+
+	//			c.draw();
+	//		}
+	//	}
+	//}
+
 	model_matrix = rotate(mat4(1.0), degreesToRadians(yAngle), yAxis);
 	model_matrix = rotate(model_matrix, degreesToRadians(xAngle), xAxis);
+	//model_matrix = translate(model_matrix, glm::vec3(0, -8, -10));
 	glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, value_ptr(model_matrix));
 
 	c.draw();

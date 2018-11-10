@@ -58,7 +58,7 @@ void indexVBO(
 			float dot = glm::dot(out_normals[index], in_normals[i]);
 			float magnitude = glm::length(out_normals[index])*glm::length(in_normals[i]);
 			float angle = glm::acos(dot/magnitude)*(180/3.14159);
-			if (angle < 80) {
+			if (angle < 30) {
 				glm::vec3 newNorm = (out_normals[index]+in_normals[i])/2.0f;
 				out_normals[index] = newNorm;
 				out_indices.push_back(index);
