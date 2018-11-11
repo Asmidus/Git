@@ -32,6 +32,7 @@ using namespace std;
 const int WINDOWWIDTH = 1600;
 const int WINDOWHEIGHT = 800;
 const double PI = 3.14159;
+const double MOVESPEED = 0.4;
 
 Viewcontroller::Viewcontroller()
 {
@@ -106,19 +107,19 @@ bool Viewcontroller::handleEvents(SDL_Event *theEvent)
 			}
 			else if (theEvent->key.keysym.sym == SDLK_UP || theEvent->key.keysym.sym == SDLK_w)
 			{
-				moveForward = 0.075;
+				moveForward = 0.075 * MOVESPEED;
 			}
 			else if (theEvent->key.keysym.sym == SDLK_LEFT || theEvent->key.keysym.sym == SDLK_a)
 			{
-				moveSideways = -0.075;
+				moveSideways = -0.075 * MOVESPEED;
 			}
 			else if (theEvent->key.keysym.sym == SDLK_RIGHT || theEvent->key.keysym.sym == SDLK_d)
 			{
-				moveSideways = 0.075;
+				moveSideways = 0.075 * MOVESPEED;
 			}
 			else if (theEvent->key.keysym.sym == SDLK_DOWN || theEvent->key.keysym.sym == SDLK_s)
 			{
-				moveForward = -0.075;
+				moveForward = -0.075 * MOVESPEED;
 			}
 			else if (theEvent->key.keysym.sym == SDLK_SPACE)
 			{
@@ -140,10 +141,10 @@ bool Viewcontroller::handleEvents(SDL_Event *theEvent)
 		}
 		case SDL_MOUSEMOTION:
 		{
-			const double MOUSE_SENSITIVITY_X = .005;
-			const double MOUSE_SENSITIVITY_Y = .005;
+			const double MOUSE_SENSITIVITY_X = .002;
+			const double MOUSE_SENSITIVITY_Y = .002;
 			MOVEANGLE += (theEvent->button.x - baseX) * MOUSE_SENSITIVITY_X;
-			LOOKANGLE += -(theEvent->button.y - baseY) * MOUSE_SENSITIVITY_Y;
+			LOOKANGLE += -(theEvent->button.y - baseY) * MOUSE_SENSITIVITY_Y * (WINDOWWIDTH/WINDOWHEIGHT);
 
 			SDL_WarpMouseInWindow(window, baseX, baseY);  //re-center the mouse cursor
 			break;

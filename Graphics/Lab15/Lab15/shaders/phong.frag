@@ -47,6 +47,7 @@ in vec4 color;
 in vec3 normal; //orientation of the normal in "eye" coordinates
 in float shininess;
 in vec2 uv;
+in vec3 fEmittance;
 
 uniform sampler2D texSampler;
 
@@ -64,10 +65,11 @@ void main()
 	}
 	//Implement the Phong reflectance model
 	//initialize scatteredLight to the global ambience * fragment color
-	vec3 scatteredLight = globalAmbientLight*color.rgb;
+	vec3 scatteredLight = globalAmbientLight*_color.rgb;
 	vec3 reflectedLight = vec3(0.0, 0.0, 0.0);
-	vec3 surfaceSpecularColor = vec3(1.0, 1.0, 1.0);//normally we want the specular color of the surface to be white
-												//so that the color of the specular highlight is the color of the light	
+//	vec3 surfaceSpecularColor = vec3(1.0, 1.0, 1.0);//normally we want the specular color of the surface to be white
+												//so that the color of the specular highlight is the color of the light
+	vec3 surfaceSpecularColor = _color.rgb;
 	//first, loop over all of the lights
 	for (int lightNum = 0; lightNum < totalLights; lightNum++)
 	{
@@ -137,7 +139,7 @@ void main()
 								  (I * surfaceSpecularColor * specularModifier) );	//specular term
 		}
 	}
-	vec3 sumOfLights = scatteredLight + reflectedLight;
+	vec3 sumOfLights = scatteredLight + reflectedLight + fEmittance;
 	vec3 rgb = min ( sumOfLights, vec3(1.0, 1.0, 1.0) );  //clamp lighting at all white
 	FragColor = vec4(rgb.r, rgb.g, rgb.b, _color.a);  //use the fragment's original alpha
 

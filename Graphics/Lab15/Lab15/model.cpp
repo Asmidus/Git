@@ -59,13 +59,13 @@ void Model::setUpLights()
 	} lightInfo;
 
 	//Now, set up the lights for the scene
-	lightInfo.totalLights = 4;
-	lightInfo.globalAmbientLight = vec3(0.3, 0.3, 0.3);
+	lightInfo.totalLights = 1;
+	lightInfo.globalAmbientLight = vec3(0.2, 0.2, 0.2);
 
 	lightInfo.lights[0].color = vec4(1.0, 1.0, 1.0, 1.0);
-	lightInfo.lights[0].position = vec4(0.0, 0.0, -4.0, 1.0);
+	lightInfo.lights[0].position = vec4(0.0, 2.0, 4.0, 1.0);
 	//lightInfo.lights[0].spotLightValues = vec4(0.0, 0.0, 0.0, 0.0);
-	lightInfo.lights[0].constantAttenuation = 2.0;
+	lightInfo.lights[0].constantAttenuation = 1.0;
 	lightInfo.lights[0].linearAttenuation = 0.0;
 	lightInfo.lights[0].quadraticAttenuation = 0.0;
 	lightInfo.lights[0].isEnabled = 1;
@@ -274,7 +274,8 @@ bool Model::init()
 	}
 	glUniform1i(glGetUniformLocation(program, "texSampler"), 0);
 	glUseProgram(program);
-	test.init("sceneTest2.obj");
+	test.init("models/test.obj");
+	light.init("models/light.obj", glm::vec3(0.8, 0.8, 0.8));
 
 	//Set up the uniform buffer objects that hold data that all of the shaders share. In this
 	//application we have two uniform buffer objects: one for the lights and one for the matrices.
@@ -338,6 +339,9 @@ void Model::draw()
 	model_matrix = translate(mat4(1.0), vec3(0.0f, 0.0f, 0.0f)); //position the brick
 	updateMatrices();
 	test.draw();
+	model_matrix = translate(mat4(1.0), vec3(0.0f, 2.0f, 4.0f)); //position the brick
+	updateMatrices();
+	light.draw();
 	//brick.draw();
 
 	//model_matrix = translate(mat4(1.0), vec3(0.0, -1.0, 0.0)); //position the ground

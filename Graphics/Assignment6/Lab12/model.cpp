@@ -65,9 +65,9 @@ bool Model::init()
 	glUseProgram(program);
 
 	//Now initialize all of our models
-	c.init("cube.obj");
+	c.init("sceneTest2.obj");
 	//Now, set up the lights for the scene
-	totalLights = 3;
+	totalLights = 1;
 	lights[0].color = vec4(1.0, 1.0, 1.0, 1.0);
 	lights[0].position = vec4(0.0, 0.0, 4.0, 1.0); //positional light since w = 1
 	//lights[0].spotLightValues = vec4(1.0, 0.99, 4.0, 0.0);

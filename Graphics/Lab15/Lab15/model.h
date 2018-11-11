@@ -45,6 +45,7 @@ protected:
 	ShaderModel <Rectangle> filter;
 
 	Shape test;
+	Shape light;
 
 	GLuint brickNoiseTexID;
 	GLint numTexLoc;

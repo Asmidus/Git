@@ -12,6 +12,7 @@ void LoadObject::loadOBJ(const string aInFilename,
 	if (aVerbose) cout << "Loading OBJ file <"
 		<< aInFilename << ">" << endl;
 	// Open file
+	string path = aInFilename.substr(0, aInFilename.find_last_of('/') + 1);
 	ifstream objFile(aInFilename.c_str());
 
 	if (objFile.fail()) {
@@ -159,7 +160,7 @@ void LoadObject::loadOBJ(const string aInFilename,
 				numFaces++;
 			}
 		} else if (line.substr(0, 6) == "mtllib") {
-			mtlFileName = line.substr(7, line.length());
+			mtlFileName = path + line.substr(7, line.length());
 		} else if (line.substr(0, 6) == "usemtl") {
 			textures.push_back(line.substr(7));
 			if (numTextures != 0) {

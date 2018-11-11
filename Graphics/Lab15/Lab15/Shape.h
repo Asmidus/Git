@@ -16,13 +16,14 @@ class Shape {
 		map<string, Material> materials;
 		vector<string> textures;
 		vector<unsigned short> indices;
+		glm::vec3 glow;
 		GLuint Buffer[4];  //We'll need a buffer for the vertex positions
 
 	public:
 		Shape();
 		~Shape();
 
-		bool init(string fileName, bool smooth = true);
+		bool init(string fileName, glm::vec3 objectGlow = glm::vec3(0, 0, 0), bool smooth = true);
 		void draw();
 };
 

@@ -7,7 +7,7 @@
 
 Shape::Shape() {}
 
-bool Shape::init(string fileName, bool smooth) {
+bool Shape::init(string fileName, glm::vec3 objectGlow, bool smooth) {
 	vector<glm::vec3> verts;
 	vector<glm::vec3> norms;
 	vector<glm::vec2> uvTemp;
@@ -22,6 +22,7 @@ bool Shape::init(string fileName, bool smooth) {
 			norms.push_back(normals[index]);
 		}
 	}
+	glow = objectGlow;
 	uvs = uvTemp;
 	vertices = verts;
 	normals = norms;
@@ -55,8 +56,14 @@ bool Shape::init(string fileName, bool smooth) {
 
 void Shape::draw() {
 	glEnable(GL_TEXTURE_2D);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffer[3]);
-	//glVertexAttrib4f(1, 0.67, 0.1, 0.5, 1);
+	glBindBuffer(GL_ARRAY_BUFFER, Buffer[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, Buffer[2]);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, Buffer[3]);
+	glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+	glVertexAttrib1f(3, 10);
+	glVertexAttrib3f(5, glow.r, glow.g, glow.b);
 	for (int i = 0; i < matRanges.size(); i++) {
 		glVertexAttrib4f(1, materials[textures[i]].Kd.r, materials[textures[i]].Kd.g, materials[textures[i]].Kd.b, materials[textures[i]].Kd.a);
 		if (materials[textures[i]].texName != "") {
