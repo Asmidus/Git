@@ -25,6 +25,9 @@ struct LightProperties
 	uint isEnabled;
 };
 
+layout (binding = 0, r32ui) uniform uimage2D output_buffer;
+
+
 const int MAXLIGHTS = 3;  //Number of lights the shader should be able to support
 layout(binding = 0,std140) uniform Lights
 {
@@ -48,11 +51,15 @@ void main()
 {
 	//vec3 color = vec3(0, 0, 1);
 	vec3 color;
-	if(fColor.w == -1) {
+	double alpha = 1;
+	if(fColor.w < 0) {
 		vec4 textureColor = texture(texSampler, fragmentUV);
 		color = vec3(textureColor.r, textureColor.g, textureColor.b);
+		alpha = textureColor.a;
+		alpha = 0.1;
 	} else {
 		color = vec3(fColor.r, fColor.g, fColor.b);
+		alpha = fColor.a;
 	}
 	vec3 surfaceDiffuseColor = color; //use the color computed by the procedural texture code as the diffuse color 
 	vec3 surfaceSpecularColor = vec3(0.0, 0.0, 0.0); //Make it black so that there will be no specular highlights
@@ -124,6 +131,7 @@ void main()
 	}
 	vec3 sumOfLights = scatteredLight + reflectedLight;
 	vec3 rgb = min ( sumOfLights, vec3(1.0, 1.0, 1.0) );  //clamp lighting at all white
-	FragColor = vec4(rgb.r, rgb.g, rgb.b, fColor.a);  //use the fragment's original alpha
+	FragColor = vec4(rgb.r, rgb.g, rgb.b, alpha);  //use the fragment's original alpha
 	//FragColor = vec4(textureColor.x * lightColor.x, textureColor.y * lightColor.y, textureColor.z * lightColor.z, textureColor.w);
+	imageAtomicAdd(output_buffer, ivec2(gl_FragCoord.xy), 1); //See page 581 in the OpenGL Programming Guide (8th edition)  	
 }

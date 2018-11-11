@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{BD9348B0-D0CA-4BBD-B10B-36D5ED4ED315}</ProjectGuid>
     <RootNamespace>Lab15</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>U:\GLM\glm-0.9.9.0\glm\glm;U:\SDL\SDL2-devel-2.0.8-VC\SDL2-2.0.8\include;U:\GLEW\glew-2.1.0-win32\glew-2.1.0\include\GL;$(IncludePath)</IncludePath>
-    <LibraryPath>U:\SDL\SDL2-devel-2.0.8-VC\SDL2-2.0.8\lib\x86;U:\GLEW\glew-2.1.0-win32\glew-2.1.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\0Programming\glm;C:\0Programming\SDL2\include;C:\0Programming\GLEW\include\GL;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\0Programming\SDL2\lib\x86;C:\0Programming\GLEW\lib\Release\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -123,31 +123,45 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="cube.h" />
+    <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="LightProperties.h" />
+    <ClInclude Include="LoadObject.h" />
     <ClInclude Include="LoadShaders.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="multiTexModel.h" />
+    <ClInclude Include="picoPNG.h" />
     <ClInclude Include="pointSprite.h" />
     <ClInclude Include="quad.h" />
     <ClInclude Include="rectangle.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="shaderModel.h" />
+    <ClInclude Include="Shape.h" />
     <ClInclude Include="texmodel.h" />
     <ClInclude Include="texture.h" />
+    <ClInclude Include="TextureCache.h" />
     <ClInclude Include="transparentTexModel.h" />
+    <ClInclude Include="vboindexer.hpp" />
     <ClInclude Include="viewcontroller.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cube.cpp" />
+    <ClCompile Include="ImageLoader.cpp" />
+    <ClCompile Include="LoadObject.cpp" />
     <ClCompile Include="LoadShaders.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="multiTexModel.cpp" />
+    <ClCompile Include="picoPNG.cpp" />
     <ClCompile Include="pointSprite.cpp" />
     <ClCompile Include="quad.cpp" />
     <ClCompile Include="rectangle.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Shape.cpp" />
     <ClCompile Include="texmodel.cpp" />
     <ClCompile Include="texture.cpp" />
+    <ClCompile Include="TextureCache.cpp" />
     <ClCompile Include="transparentTexModel.cpp" />
+    <ClCompile Include="vboindexer.cpp" />
     <ClCompile Include="viewcontroller.cpp" />
   </ItemGroup>
   <ItemGroup>

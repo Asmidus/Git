@@ -34,7 +34,7 @@ bool Model::init()
 		return false;
 	}
 
-	glClearColor(0.8, 0.8, 0.8, 1.0);
+	glClearColor(0.0, 0.0, 0.8, 1.0);
 	glEnable(GL_DEPTH_TEST);
 
 	//The following code was adapted from the OpenGL 4.0 Shading Language Cookbook, by David Wolff
@@ -65,7 +65,7 @@ bool Model::init()
 	glUseProgram(program);
 
 	//Now initialize all of our models
-	c.init("sceneTest2.obj");
+	c.init("cube.obj");
 	//Now, set up the lights for the scene
 	totalLights = 3;
 	lights[0].color = vec4(1.0, 1.0, 1.0, 1.0);

@@ -7,11 +7,13 @@ layout(location = 0) in vec4 vertexPosition;
 layout(location = 1) in vec4 vertexColor;
 layout(location = 2) in vec3 vertexNormal;
 layout(location = 3) in float vertexShininess;
+layout(location = 4) in vec2 vertexUV;
 
 out vec4 position; //position of the vertex in "eye" coordinates
 out vec4 color;
 out vec3 normal; //orientation of the normal in "eye" coordinates
 out float shininess;
+out vec2 uv;
 
 layout(binding = 35,std140) uniform Matrices
 {
@@ -27,6 +29,6 @@ void main()
 	vec4 n = view_matrix * model_matrix * vec4(vertexNormal, 0.0); //Assumes only isometric scaling of objects
 	normal = normalize(vec3(n.x, n.y, n.z));
 	shininess = vertexShininess;
-
+	uv = vec2(vertexUV.x, 1.0 - vertexUV.y);
 	gl_Position = projection_matrix * position;
 }

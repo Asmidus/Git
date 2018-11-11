@@ -47,7 +47,7 @@ Viewcontroller::Viewcontroller()
 	LOOKANGLE = 0.0;
 	baseX = WINDOWWIDTH / 2.0;
 	baseY = WINDOWHEIGHT / 2.0;
-	eye = vec3(0.0, 0.0, -9.0);
+	eye = vec3(0.0, 0.0, 0.0);
 	up = vec3(0.0, 1.0, 0.0);
 	updateLookAt();  //aim will be calculated from the initial values of eye and MOVEANGLE
 }
@@ -140,9 +140,8 @@ bool Viewcontroller::handleEvents(SDL_Event *theEvent)
 		}
 		case SDL_MOUSEMOTION:
 		{
-			const double MOUSE_SENSITIVITY_X = .01;
-			const double MOUSE_SENSITIVITY_Y = .01;
-			
+			const double MOUSE_SENSITIVITY_X = .005;
+			const double MOUSE_SENSITIVITY_Y = .005;
 			MOVEANGLE += (theEvent->button.x - baseX) * MOUSE_SENSITIVITY_X;
 			LOOKANGLE += -(theEvent->button.y - baseY) * MOUSE_SENSITIVITY_Y;
 

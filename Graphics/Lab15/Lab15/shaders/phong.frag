@@ -46,11 +46,22 @@ in vec4 position; //position of the fragment in "eye" coordinates
 in vec4 color;
 in vec3 normal; //orientation of the normal in "eye" coordinates
 in float shininess;
+in vec2 uv;
+
+uniform sampler2D texSampler;
 
 out vec4 FragColor;
 
 void main()
 {
+	vec4 _color;
+	if(color.w < 0) {
+		vec4 textureColor = texture(texSampler, uv);
+		_color = vec4(textureColor.r, textureColor.g, textureColor.b, textureColor.a);
+		//alpha = 0.1;
+	} else {
+		_color = color;
+	}
 	//Implement the Phong reflectance model
 	//initialize scatteredLight to the global ambience * fragment color
 	vec3 scatteredLight = globalAmbientLight*color.rgb;
@@ -66,7 +77,7 @@ void main()
 			vec3 L; //this will be the L vector in the Phong reflectance model (lightDirection in the code on pages 377 and 378)
 			vec4 lightPos_eyeCoords = view_matrix*lights[lightNum].position; //put light position in "eye" coordinates
 			
-			vec3 surfaceDiffuseColor = color.rgb; //k_dif in the Phong reflectance model
+			vec3 surfaceDiffuseColor = _color.rgb; //k_dif in the Phong reflectance model
 			float f; //attenuation in the phong reflectance model
 				
 			if (lights[lightNum].position.w > 0.1)  //a point light
@@ -128,7 +139,7 @@ void main()
 	}
 	vec3 sumOfLights = scatteredLight + reflectedLight;
 	vec3 rgb = min ( sumOfLights, vec3(1.0, 1.0, 1.0) );  //clamp lighting at all white
-	FragColor = vec4(rgb.r, rgb.g, rgb.b, color.a);  //use the fragment's original alpha
+	FragColor = vec4(rgb.r, rgb.g, rgb.b, _color.a);  //use the fragment's original alpha
 
 	imageAtomicAdd(output_buffer, ivec2(gl_FragCoord.xy), 1); //See page 581 in the OpenGL Programming Guide (8th edition)  	
 }

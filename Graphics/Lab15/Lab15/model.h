@@ -18,6 +18,7 @@
 #include "shaderModel.h"
 #include "cube.h"
 #include "rectangle.h"
+#include "Shape.h"
 using namespace glm;
 
 class Model
@@ -42,6 +43,8 @@ protected:
 	ShaderModel <Cube> brick;
 	ShaderModel <Cube> cube;
 	ShaderModel <Rectangle> filter;
+
+	Shape test;
 
 	GLuint brickNoiseTexID;
 	GLint numTexLoc;
