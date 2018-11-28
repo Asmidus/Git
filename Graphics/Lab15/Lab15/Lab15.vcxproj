@@ -70,8 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\0Programming\glm;C:\0Programming\SDL2\include;C:\0Programming\GLEW\include\GL;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\0Programming\SDL2\lib\x86;C:\0Programming\GLEW\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\0Programming\SDL2_Mixer\include;C:\0Programming\glm;C:\0Programming\SDL2\include;C:\0Programming\GLEW\include\GL;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\0Programming\SDL2_Mixer\lib\x86;C:\0Programming\SDL2\lib\x86;C:\0Programming\GLEW\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>C:\0Programming\SDL2_Mixer\include;C:\0Programming\glm;C:\0Programming\SDL2\include;C:\0Programming\GLEW\include\GL;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\0Programming\SDL2_Mixer\lib\x86;C:\0Programming\SDL2\lib\x86;C:\0Programming\GLEW\lib\Release\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -83,6 +87,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalOptions>opengl32.lib glu32.lib glew32s.lib SDL2main.lib SDL2.lib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -105,6 +110,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -122,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Audio.h" />
     <ClInclude Include="cube.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="LightProperties.h" />
@@ -144,6 +151,7 @@
     <ClInclude Include="viewcontroller.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="cube.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="LoadObject.cpp" />

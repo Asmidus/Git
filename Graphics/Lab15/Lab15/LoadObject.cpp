@@ -56,24 +56,6 @@ void LoadObject::loadOBJ(const string aInFilename,
 			verts.push_back(val);
 		}
 
-
-		// Extract textures
-		// Line starts with vt[space]...
-		//else if (line[0] == 'v' && line[1] == 't' && line[2] == ' ') {
-		//	string lineVals = line.substr(3);
-		//	float val;
-
-		//	string val0 = lineVals.substr(0, lineVals.find(' '));
-		//	val = (float)atof(val0.c_str());
-		//	textures.push_back(val);
-
-		//	string val1 = lineVals.substr(val0.length() + 1,
-		//		lineVals.find(' '));
-		//	val = (float)atof(val1.c_str());
-		//	textures.push_back(val);
-		//}
-
-
 		// Extract normals
 		// Line starts with vn[space]...
 		else if (line[0] == 'v' && line[1] == 'n' && line[2] == ' ') {
@@ -211,6 +193,15 @@ void LoadObject::loadOBJ(const string aInFilename,
 			float d3 = (float)atof(val2.c_str());
 			//*finalMaterials.begin() = glm::vec4(d1, d2, d3, 1);
 			finalMaterials[currMat].Kd = glm::vec4(d1, d2, d3, 1);
+		}
+		else if (line.substr(0, 2) == "d ") {
+			string lineVal = line.substr(2);
+			float val;
+
+			val = (float)atof(lineVal.c_str());
+
+			//*finalMaterials.begin() = glm::vec4(d1, d2, d3, 1);
+			finalMaterials[currMat].Kd.a = val;
 		}
 		else if (line.substr(0, 6) == "map_Kd") {
 			//textures.push_back(line.substr(line.find_last_of('\\') + 1, line.length()));
