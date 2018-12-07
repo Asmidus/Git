@@ -165,7 +165,7 @@ bool Model::init()
 	glUseProgram(phongShaders);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	test.init("models/room.obj");
+	test.init("models/untitled.obj");
 	light.init("models/light.obj", false);
 	pane.init("models/transparentplane.obj");
 	sphere.init("models/sphere.obj", false);
@@ -206,20 +206,20 @@ void Model::draw()
 	test.draw();
 	model_matrix = translate(mat4(1.0), vec3(0.0f, 2.0f, 4.0f)); //position the brick
 	updateMatrices();
-	light.draw(glm::vec3(0.8, 0, 0));
+	//light.draw(glm::vec3(0.8, 0, 0));
 	model_matrix = translate(mat4(1.0), vec3(0.0f, 2.0f, -4.0f));
 	updateMatrices();
-	light.draw(glm::vec3(0, 0, 0.8));
+	//light.draw(glm::vec3(0, 0, 0.8));
 	model_matrix = translate(mat4(1.0), vec3(4.0f, 2.0f, 0.0f));
 	updateMatrices();
-	light.draw(glm::vec3(0, 0.8, 0));
+	//light.draw(glm::vec3(0, 0.8, 0));
 	model_matrix = translate(mat4(1.0), vec3(-3.2, 1.5, 0));
 	model_matrix = scale(model_matrix, vec3(1, 3, 5));
 	updateMatrices();
-	pane.draw();
+	//pane.draw();
 	model_matrix = translate(mat4(1.0), vec3(4.0f, -0.3f, 0.0f)); //position the brick
 	updateMatrices();
-	sphere.draw();
+	//sphere.draw();
 
 	glFlush();
 }
