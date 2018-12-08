@@ -1,5 +1,6 @@
 import random
 import pathfinding
+import math
 
 def ParseGrid(fileName):
     f = open(fileName, 'r')
@@ -28,11 +29,22 @@ def SelectCrimeTile(grid, totalWeight):
             i += 1
     return (i, j)
 
+def GetResponseTime(grid, startTile, endTile, travelSpeed):
+    path = pathfinding.astar(grid, startTile, endTile)
+    distance = 0
+    #The height and width of each tile is 1m^2
+    for i in range(len(path)-1):
+        if path[i][0] == path[i+1][0] or path[i][1] == path[i+1][1]:
+            distance += 1
+        else:
+            distance += math.sqrt(2)
+    return (distance/travelSpeed)*60.0 #convert hours to minutes
 
-grid, weight = ParseGrid("test.txt")
+grid, weight = ParseGrid("stockton.csv")
 i, j = SelectCrimeTile(grid, weight)
-start = (1, 0)
-end = (1, 2)
+start = (7, 7)
+end = (26, 13)
+speed = 45 #mph
+time = GetResponseTime(grid, start, end, speed)
 
-path = pathfinding.astar(grid, start, end)
-print(path)
+print(time)
